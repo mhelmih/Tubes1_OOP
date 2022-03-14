@@ -53,6 +53,7 @@ int main() {
   //show list
   listItemConfig.printList();
 
+  ListRecipe listRecipeConfig;
   ItemRecipe Recipe(3,3);
   int in_line =0;
   int in_col = 0;
@@ -102,11 +103,13 @@ int main() {
       }
       in_line++;
     }
-    // ListRecipeConfig.addRecipe(ItemRecipe(Recipe));
+    ItemRecipe *Temp = new ItemRecipe(Recipe);
+    listRecipeConfig.addRecipe(*Temp);
     //show recipe
-    Recipe.printRecipe();
+    // Recipe.printRecipe();
     // cout << endl;
   }
+  listRecipeConfig.printListRecipe();
 
   // sample interaction
   string command;

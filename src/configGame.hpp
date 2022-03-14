@@ -40,10 +40,13 @@ private:
 public:
     ItemRecipe();
     ItemRecipe(int row, int col);
-    ItemRecipe(ItemRecipe& recipe);
+    ItemRecipe(const ItemRecipe& recipe);
     ~ItemRecipe();
     void setRow(int row);
+    int getRow();
     void setCol(int col);
+    int getCol();
+    string getElement(int i, int j);
     void new_matrix(int row,int col);
     void set_matrix(string line, int row,int col);
     void set_quantity(int quantity);
@@ -62,6 +65,19 @@ public:
     ~ListItemConfig();
     void addElmt(ItemConfig elemen);
     void printList();
+};
+
+class ListRecipe
+{
+private:
+    ItemRecipe *listRecipe;
+    int Neff;
+public:
+    ListRecipe();
+    ListRecipe(int capacity);
+    ~ListRecipe();
+    void addRecipe(const ItemRecipe &elemen);
+    void printListRecipe();
 };
 
 int get_number(string number_string);

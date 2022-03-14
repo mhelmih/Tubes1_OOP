@@ -83,7 +83,7 @@ ItemRecipe::ItemRecipe(int row, int col)
     this->quantity =0;
     this->matrix = new string*[row];
     for (int i=0; i<row;i++){
-        matrix[i] = new string[col];
+        this->matrix[i] = new string[col];
     }
     for(int i=0; i<col;i++){
         for(int j=0; j<col;j++){
@@ -93,7 +93,7 @@ ItemRecipe::ItemRecipe(int row, int col)
 }
 
 
-ItemRecipe::ItemRecipe(ItemRecipe& recipe)
+ItemRecipe::ItemRecipe(const ItemRecipe& recipe)
 {
     this->row =recipe.row;
     this->col =recipe.col;
@@ -127,10 +127,6 @@ void ItemRecipe::new_matrix(int row, int col){
     this->row =row;
     this->col =col;
     this->itemCraft = "-";
-    this->matrix = new string*[row];
-    for (int i=0; i<row;i++){
-        matrix[i] = new string[col];
-    }
 }
 void ItemRecipe::set_matrix(string line, int row, int col){
     this->matrix[row][col] = line;
@@ -139,9 +135,18 @@ void ItemRecipe::set_matrix(string line, int row, int col){
 void ItemRecipe::setRow(int row){
     this->row = row;
 }
+int ItemRecipe::getRow(){
+    return this->row;
+}
+
 void ItemRecipe::setCol(int col){
     this->col =col;
 }
+
+int ItemRecipe::getCol(){
+    return this->col;
+}
+
 
 void ItemRecipe::set_quantity(int quantity){
     this->quantity = quantity;
@@ -151,6 +156,9 @@ void ItemRecipe::set_item(string itemCraft){
     this->itemCraft =itemCraft;
 }
 
+string ItemRecipe::getElement(int i, int j){
+    return this->matrix[i][j];
+}
 void ItemRecipe::printRecipe()
 {
     cout << "row     : " << this->row << endl;
@@ -194,6 +202,54 @@ void ListItemConfig::printList(){
     }
 }
 
+ListRecipe::ListRecipe(){
+    this->listRecipe = new ItemRecipe[MAX_LIST_CONFIG];
+    for (int i=0; i<MAX_LIST_CONFIG; i++){
+        this->listRecipe[i] = ItemRecipe(3,3);
+    }
+    this->Neff = 0;
+}
+
+ListRecipe::ListRecipe(int capacity){
+    this->listRecipe = new ItemRecipe[MAX_LIST_CONFIG];
+    for (int i=0; i<MAX_LIST_CONFIG; i++){
+        this->listRecipe[i] = ItemRecipe(3,3);
+    }
+    this->Neff = 0;
+}
+
+
+ListRecipe::~ListRecipe(){
+    for (int i=0;i<Neff;i++){
+        this->listRecipe[i].~ItemRecipe();
+    }
+    delete[] this->listRecipe;
+}
+
+void ListRecipe::addRecipe(const ItemRecipe &elemen) {
+    if (this->Neff == MAX_LIST_CONFIG) {
+        throw "Queue is full";
+    } else {
+        // this->listRecipe[this->Neff].setRow(elemen.getRow()) ;
+        // this->listRecipe[this->Neff].setCol(elemen.getCol()) ;
+        // this->listRecipe[this->Neff].new_matrix(elemen.getRow(), elemen.getCol());
+        // for(int i=0; i<elemen.getRow(); i++){
+        //     for(int j=0; j<elemen.getCol(); j++){
+        //         this->listRecipe[this->Neff].set_matrix(elemen.getElement(i,j), i, j);
+        //     }
+        // }
+        this->listRecipe[this->Neff] = elemen;
+    }
+    this->Neff++;
+}
+
+void ListRecipe::printListRecipe(){
+    for (int i = 0; i< this->Neff;i++){
+        this->listRecipe[i].printRecipe();
+    }
+    // this->listRecipe[0].printRecipe();
+    // this->listRecipe[1].printRecipe();
+}
 
 int get_number(string number_string){
     int number;
