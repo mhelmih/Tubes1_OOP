@@ -46,11 +46,13 @@ public:
     int getRow();
     void setCol(int col);
     int getCol();
-    string getElement(int i, int j);
     void new_matrix(int row,int col);
     void set_matrix(string line, int row,int col);
+    string getElement(int row, int col);
     void set_quantity(int quantity);
+    int get_quantity();
     void set_item(string itemCraft );
+    string get_item();
     void printRecipe();
 };
 
@@ -65,6 +67,7 @@ public:
     ~ListItemConfig();
     void addElmt(ItemConfig elemen);
     void printList();
+    ItemConfig operator[](int index);
 };
 
 class ListRecipe
@@ -78,6 +81,7 @@ public:
     ~ListRecipe();
     void addRecipe(const ItemRecipe &elemen);
     void printListRecipe();
+    ItemRecipe operator[](int index);
 };
 
 int get_number(string number_string);

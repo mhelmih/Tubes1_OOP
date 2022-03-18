@@ -132,6 +132,10 @@ void ItemRecipe::set_matrix(string line, int row, int col){
     this->matrix[row][col] = line;
 }
 
+string ItemRecipe::getElement(int row, int col){
+    return this->matrix[row][col];
+}
+
 void ItemRecipe::setRow(int row){
     this->row = row;
 }
@@ -152,13 +156,17 @@ void ItemRecipe::set_quantity(int quantity){
     this->quantity = quantity;
 }
 
+int ItemRecipe::get_quantity(){
+    return this->quantity;
+}
+
 void ItemRecipe::set_item(string itemCraft){
     this->itemCraft =itemCraft;
 }
-
-string ItemRecipe::getElement(int i, int j){
-    return this->matrix[i][j];
+string ItemRecipe::get_item(){
+    return this->itemCraft;
 }
+
 void ItemRecipe::printRecipe()
 {
     cout << "row     : " << this->row << endl;
@@ -201,6 +209,11 @@ void ListItemConfig::printList(){
         this->listconfig[i].print();
     }
 }
+ItemConfig ListItemConfig::operator[](int index){
+    // sesuai id
+    return this->listconfig[index-1];
+    // need exception if out of range
+}
 
 ListRecipe::ListRecipe(){
     this->listRecipe = new ItemRecipe[MAX_LIST_CONFIG];
@@ -230,14 +243,6 @@ void ListRecipe::addRecipe(const ItemRecipe &elemen) {
     if (this->Neff == MAX_LIST_CONFIG) {
         throw "Queue is full";
     } else {
-        // this->listRecipe[this->Neff].setRow(elemen.getRow()) ;
-        // this->listRecipe[this->Neff].setCol(elemen.getCol()) ;
-        // this->listRecipe[this->Neff].new_matrix(elemen.getRow(), elemen.getCol());
-        // for(int i=0; i<elemen.getRow(); i++){
-        //     for(int j=0; j<elemen.getCol(); j++){
-        //         this->listRecipe[this->Neff].set_matrix(elemen.getElement(i,j), i, j);
-        //     }
-        // }
         this->listRecipe[this->Neff] = elemen;
     }
     this->Neff++;
@@ -247,8 +252,10 @@ void ListRecipe::printListRecipe(){
     for (int i = 0; i< this->Neff;i++){
         this->listRecipe[i].printRecipe();
     }
-    // this->listRecipe[0].printRecipe();
-    // this->listRecipe[1].printRecipe();
+
+}
+ItemRecipe ListRecipe::operator[](int index){
+    return this->listRecipe[index];
 }
 
 int get_number(string number_string){
