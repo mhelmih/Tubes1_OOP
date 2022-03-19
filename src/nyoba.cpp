@@ -1,19 +1,18 @@
-#include <iostream>
 
+#include <vector>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include "Craft.cpp"
 #include "Item.cpp"
+#include "configGame.cpp"
 
 using namespace std;
 
 int main() {
     // Inventory tes;
-    string a = "aa";
-    string b = "bb";
-    Item temp(1, "kayu", "log");
-    if (a == b) {
-        cout << "sama" << endl;
-    }
-    cout << "tes" << endl;
-    // cout << tes[0].get_id() << endl;
-    cout << "tes" << endl;
+    Craft a;
+
     return 0;
 }

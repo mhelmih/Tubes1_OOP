@@ -109,6 +109,10 @@ NonTool::NonTool(const NonTool& other) : Item(other.id, other.name,other.type) {
     this->quantity = other.quantity;
 }
 
+NonTool::~NonTool(){
+    
+}
+
 NonTool& NonTool::operator=(const NonTool& other) {
     this->id = other.id;
     this->name = other.name;
