@@ -1,8 +1,11 @@
 #ifndef CRAFTINGTABLE_HPP
 #define CRAFTINGTABLE_HPP
 
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "configGame.hpp"
 #include "Craft.hpp"
@@ -15,10 +18,18 @@ class CraftingTable {
     private:
         Inventory inv;
         Craft crf;
-        String command;
+        ListItemConfig listItemConfig;
+        ListRecipe listRecipeConfig;
 
-        void readConfig();
-        void readCommand();
+        string command;
+        string configPath;
+        string itemConfigPath;
+        string recipeConfigPath;
+
+        /* ******* CONFIG ******* */
+
+        void readItemConfig(vector<string> &words);
+        void readItemRecipe(vector<string> &wordsrecipe);
 
         /* ******* COMMAND ******* */
 
@@ -78,7 +89,7 @@ class CraftingTable {
          * MOVE <INVENTORY_SLOT_ID> N <CRAFTING_SLOT_ID_1> ... <CRAFTING SLOT_ID_N>
          * Contoh: MOVE I0 N C0 C1 C2 ... CN
          */
-        void move(int invIdx, int qty, int crfId); //ini parameternya gatau harus apa
+        void moveToCraft(int invIdx, int qty, int crfId); //ini parameternya gatau harus apa
 
         /**
          * Menumpuk Item. Dua buah item non tool yang sama pada inventory dapat ditumpuk.
@@ -93,7 +104,7 @@ class CraftingTable {
          * MOVE <INVENTORY_SLOT_ID_SRC> 1 <INVENTORY_SLOT_ID_DEST>
          * Contoh: MOVE I0 1 I1
          */
-        void move(int invIdxSrc, int invIdxDest);
+        void movetoStack(int invIdxSrc, int invIdDest);
 
         /**
          * Mengembalikan Item dari slot crafting ke inventory.
@@ -108,7 +119,7 @@ class CraftingTable {
          * MOVE <CRAFTING_SLOT_ID> 1 <INVENTORY_SLOT_ID>
          * Contoh: MOVE C0 1 I0
          */
-        void move(int crdIdx, int invIdx);
+        void moveToInventory(int crfIdx, int invIdx);
 
         /**
          * Menggunakan Item. Item tool dapat digunakan dan durabilitasnya akan berkurang.
@@ -153,8 +164,10 @@ class CraftingTable {
         void exportInventory();
 
     public:
-        CraftingTable(); // isinya cuma manggil readConfig sama readCommand
+        CraftingTable();
         ~CraftingTable();
+        void readConfig();
+        void readCommand();
 };
 
 #endif
