@@ -11,7 +11,7 @@
 
 using namespace std;
 
-class Command {
+class CraftingTable {
     private:
         Inventory inv;
         Craft crf;
