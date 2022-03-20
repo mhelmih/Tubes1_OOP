@@ -3,7 +3,7 @@
 CraftingTable::CraftingTable() {
     this->command = "";
     this->configPath = "./config";
-    this->itemConfigPath = configPath + "/item";
+    this->itemConfigPath = configPath + "/item.txt";
     this->recipeConfigPath = configPath + "/recipe";
 }
 
@@ -61,7 +61,8 @@ void CraftingTable::readConfig() {
     // read item from config file
     ifstream itemConfigFile(this->itemConfigPath);
     for (string line; getline(itemConfigFile, line);) {
-        // cout << line << endl;
+        // menghapus newline
+        line.pop_back();
         // split line
         while ((pos = line.find(delimiter)) != string::npos) {
             words.push_back(line.substr(0, pos));
@@ -86,6 +87,7 @@ void CraftingTable::readConfig() {
 
         // split line setiap file config
         for (string line; getline(itemConfigRecipe, line);) {
+
             while ((pos = line.find(delimiter)) != string::npos) {
                 wordsrecipe.push_back(line.substr(0, pos));
                 line.erase(0, pos + delimiter.length());
