@@ -129,10 +129,16 @@ void ItemRecipe::new_matrix(int row, int col){
     this->itemCraft = "-";
 }
 void ItemRecipe::set_matrix(string line, int row, int col){
+    if (row >=this->row || col >this->col){
+        throw "index out of range";
+    }
     this->matrix[row][col] = line;
 }
 
 string ItemRecipe::getElement(int row, int col){
+    if (row >=this->row || col >this->col){
+        throw "index out of range";
+    }
     return this->matrix[row][col];
 }
 
@@ -197,7 +203,7 @@ ListItemConfig::~ListItemConfig(){
 }
 void ListItemConfig::addElmt(ItemConfig elemen) {
     if (this->Neff == MAX_LIST_CONFIG) {
-        throw "Queue is full";
+        throw "list Item is full";
     } else {
         this->listconfig[this->Neff] = elemen;
     }
@@ -241,7 +247,7 @@ ListRecipe::~ListRecipe(){
 
 void ListRecipe::addRecipe(const ItemRecipe &elemen) {
     if (this->Neff == MAX_LIST_CONFIG) {
-        throw "Queue is full";
+        throw "List Recipe is full";
     } else {
         this->listRecipe[this->Neff] = elemen;
     }
@@ -255,6 +261,9 @@ void ListRecipe::printListRecipe(){
 
 }
 ItemRecipe ListRecipe::operator[](int index){
+    if (index >= this->Neff) {
+        throw "index out of range list";
+    }
     return this->listRecipe[index];
 }
 

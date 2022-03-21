@@ -22,7 +22,12 @@ void CraftingTable::readItemConfig(vector<string> &words) {
     iwords++;
     temp.set_category(words[iwords]);
     iwords++;
-    this->listItemConfig.addElmt(temp);
+    try{
+        this->listItemConfig.addElmt(temp);;
+    }
+    catch(string& s){
+        cout << "list item config is full"<< endl;
+    }
 }
 
 void CraftingTable::readItemRecipe(vector<string> &wordsrecipe) {
@@ -47,8 +52,12 @@ void CraftingTable::readItemRecipe(vector<string> &wordsrecipe) {
     iwordsrecipe++;
     temp->set_quantity(get_number(wordsrecipe[iwordsrecipe]));
     iwordsrecipe++;
-
-    this->listRecipeConfig.addRecipe(*temp);
+    try{
+        this->listRecipeConfig.addRecipe(*temp);
+    }
+    catch(string& s){
+        cout << "list recipe is full"<< endl;
+    }
 }
 
 void CraftingTable::readConfig() {
@@ -99,7 +108,17 @@ void CraftingTable::readConfig() {
         readItemRecipe(wordsrecipe);
         wordsrecipe.clear();
     }
+    // print recipe
     this->listRecipeConfig.printListRecipe();
+
+    // test list exception
+    try{
+        ItemRecipe *temp = new ItemRecipe(listRecipeConfig[0]);
+        cout << temp->getElement(1, 0)<<endl;
+    }
+    catch (const char* msg){
+        cout << msg <<endl;
+    }
 }
 
 void CraftingTable::help() {
