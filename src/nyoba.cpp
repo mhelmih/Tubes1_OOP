@@ -13,6 +13,7 @@ using namespace std;
 int main() {
     // Inventory tes;
     Craft a;
-
+    a.slot[0]->printInfo();
+    cout << "Tes" << endl;
     return 0;
 }

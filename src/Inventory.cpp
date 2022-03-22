@@ -1,14 +1,11 @@
 #include "Inventory.hpp"
 
 Inventory::Inventory() {
-    this->slot = new Item[INVENTORY_SLOT];
-    for (int i = 0; i < INVENTORY_SLOT; i++) {
-        this->slot[i] = Item();
-    }
+    this->slot.assign(27, 0);
 }
 
 Inventory::~Inventory() {
-    delete[] slot;
+    delete[] this->slot;
 }
 
 Item Inventory::operator[](int idx) {

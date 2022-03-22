@@ -15,12 +15,11 @@
 
 class Craft {
     private:
-        Item slot[9];
-
+        vector<Item*> slot;
         //Atribut buat pengecekan
         string curName[3][3];
-
     public:
+        
         Craft(); //diisi sama item "null" (dibuat pake default constructor)
         ~Craft();
 

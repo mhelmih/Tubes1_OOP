@@ -10,7 +10,7 @@
 
 class Inventory {
     private:
-        Item* slot;
+        vector<Item*> slot;
     public:
         Inventory(); //diisi sama item "null" (dibuat pake default constructor)
         ~Inventory();

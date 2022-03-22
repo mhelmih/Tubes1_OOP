@@ -19,6 +19,7 @@ class Item {
         int get_id() const;
         string get_name() const;
         string get_type() const;
+        virtual void printInfo()=0;
         // virtual int get_quantity();
 };
 
@@ -36,6 +37,7 @@ class Tool : public Item {
         void set_durability(int durability);
         void use();
         Tool& operator+(const Tool& other);
+        void printInfo();
 };
 
 
@@ -51,6 +53,7 @@ class NonTool : public Item {
         int get_quantity();
         void set_quantity(int quantity);
         NonTool& operator+(const NonTool& other);
+        void printInfo();
 };
 
 #endif
