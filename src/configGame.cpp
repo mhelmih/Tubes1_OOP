@@ -215,6 +215,11 @@ void ListItemConfig::printList(){
         this->listconfig[i].print();
     }
 }
+
+int ListItemConfig::get_Neff() const {
+    return this->Neff;
+}
+
 ItemConfig ListItemConfig::operator[](int index){
     // sesuai id
     return this->listconfig[index-1];
@@ -258,8 +263,12 @@ void ListRecipe::printListRecipe(){
     for (int i = 0; i< this->Neff;i++){
         this->listRecipe[i].printRecipe();
     }
-
 }
+
+int ListRecipe::get_Neff() const {
+    return this->Neff;
+}
+
 ItemRecipe ListRecipe::operator[](int index){
     if (index >= this->Neff) {
         throw "index out of range list";

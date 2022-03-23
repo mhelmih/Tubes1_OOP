@@ -3,15 +3,18 @@
 Craft::Craft(){
     
     slot.assign(9, 0);
-    //slot[0] = new Tool();
+    // slot[0] = new Tool();
     // Tool* tool = slot[0];
     // tool->get_durability();
-    //Tool* tool = dynamic_cast<Tool*>(slot[0]);
+    // Tool* tool = dynamic_cast<Tool*>(slot[0]);
     // tool->get_durability();
 }
 
 Craft::~Craft(){
-    delete[] this->slot;
+    for (Item* item : this->slot) {
+        delete[] item;
+    }
+    this->slot.clear();
 }
 
 bool Craft::isRecipe(){
@@ -20,4 +23,9 @@ bool Craft::isRecipe(){
 
 void Craft::show(){
     cout << "test";
+}
+
+Item* &Craft::operator[](int idx) {
+    // harus ditambahin exception kalo lebih dari 27
+    return slot[idx];
 }

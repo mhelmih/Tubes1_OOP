@@ -15,11 +15,11 @@ class Inventory {
     public:
         Inventory(); //diisi sama item "null" (dibuat pake default constructor)
         ~Inventory();
-        Item* operator[](int idx);
+        Item* &operator[](int idx);
         vector<int> isIn(string name); // mencari semua indeks kemunculan item dengan nama name
         bool isFull();
-        void give(NonTool item, int quantity);
-        void give(Tool item);
+        void give(NonTool* item, int quantity);
+        void give(Tool* item);
         void discard(int idx, int quantity);
         void use(int idx);
 };

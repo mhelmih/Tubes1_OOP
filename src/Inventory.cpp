@@ -11,27 +11,31 @@ Inventory::~Inventory() {
     this->slot.clear();
 }
 
-Item* Inventory::operator[](int idx) {
+Item* &Inventory::operator[](int idx) {
     // harus ditambahin exception kalo lebih dari 27
-    return this->slot[idx];
+    return slot[idx];
 }
 
 vector<int> Inventory::isIn(string name) {
     vector<int> idx;
     for (int i = 0; i < INVENTORY_SLOT; i++) {
-        if (this->slot[i]->get_name() == name) {
-            idx.push_back(i);
+        if (this->slot[i]->isA<Tool>() || this->slot[i]->isA<NonTool>()) {
+            cout << this->slot[i]->get_name() << endl;
+            if (this->slot[i]->get_name() == name) {
+                idx.push_back(i);
+            }
         }
     }
+
     return idx;
 }
 
-void Inventory::give(Tool item) {
+void Inventory::give(Tool* item) {
     int i = 0;
     bool flag = false;
     while(i < INVENTORY_SLOT && !flag){
         if(this->slot[i]->get_id() == -1){
-            this->slot[i] = &item;
+            this->slot[i] = item;
             flag = true;
         }
         else{
@@ -40,8 +44,8 @@ void Inventory::give(Tool item) {
     }
 }
 
-void Inventory::give(NonTool item, int quantity) {
-    vector<int> idx = isIn(item.get_name());
+void Inventory::give(NonTool* item, int quantity) {
+    vector<int> idx = isIn(item->get_name());
     int i = 0;
     while (idx.size() > 0 && quantity > 0) {
         NonTool* nt = dynamic_cast<NonTool*>(this->slot[idx[i]]);

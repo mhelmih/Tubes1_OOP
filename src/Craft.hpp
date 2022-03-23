@@ -26,7 +26,7 @@ class Craft {
         bool isRecipe();
         void show();
         // void Crafting();
-        // Item operator[](int idx);
+        Item* &operator[](int idx);
         // vector<int> isIn(string name); // mencari semua indeks kemunculan item dengan nama name
         // bool isFull();
         // void give(NonTool item, int quantity);

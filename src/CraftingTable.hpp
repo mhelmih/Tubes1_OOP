@@ -62,7 +62,7 @@ class CraftingTable {
          * GIVE <ITEM_NAME> <ITEM_QTY>
          * Contoh: GIVE OAK_WOOD 10
          */
-        void give(Item itm, int qty);
+        void give();
 
         /**
          * Membuang item di slot inventory dengan kuantitas yang diberikan. 
@@ -131,7 +131,7 @@ class CraftingTable {
          * USE <INVENTORY_SLOT_ID>
          * Contoh: USE I0
          */
-        void use(int invIdx);
+        void use();
 
         /**
          * Craft Item. Jika terdapat resep yang memenuhi, Item bahan akan hilang dan 
