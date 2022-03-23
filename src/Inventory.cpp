@@ -34,46 +34,62 @@ void Inventory::give(Tool* item) {
     int i = 0;
     bool flag = false;
     while(i < INVENTORY_SLOT && !flag){
-        if(this->slot[i]->get_id() == -1){
-            this->slot[i] = item;
+        if(this->slot[i] == 0){
             flag = true;
         }
         else{
             i++;
         }
     }
+    if (i == INVENTORY_SLOT) {
+        cout << "Slot Inventory sudah penuh" << endl;
+    }
+    else {
+        this->slot[i] = item;
+    }
 }
 
 void Inventory::give(NonTool* item, int quantity) {
-    vector<int> idx = isIn(item->get_name());
     int i = 0;
-    // if there's no item found
-    if (idx.size() == 0) {
-        int invIdx = 0;
-        bool found = false;
-        while (invIdx < INVENTORY_SLOT && !found) {
-            if (this->slot[invIdx] != 0) {
-                found = true;
-            } else {
-                invIdx++;
+    while (quantity > 0) {
+        vector<int> idx = isIn(item->get_name());
+        // if there's no item found
+        if (idx.size() == 0 || i >= idx.size()) {
+            int invIdx = 0;
+            bool found = false;
+            while (invIdx < INVENTORY_SLOT && !found) {
+                if (this->slot[invIdx] == 0) {
+                    found = true;
+                } 
+                else {
+                    invIdx++;
+                }
             }
-        }
-        this->slot[i] = item;
-    } else {
-        while (idx.size() > 0 && quantity > 0) {
+            if (invIdx == INVENTORY_SLOT) {
+                cout << "Slot inventory sudah penuh" << endl;
+            }
+            else {
+                NonTool* nt = item;
+                nt->set_quantity(min(quantity, 64));
+                this->slot[invIdx] = nt;
+                quantity = max(0, quantity-64);
+            }
+        } 
+        else {
             NonTool* nt = dynamic_cast<NonTool*>(this->slot[idx[i]]);
             if (nt->get_quantity() + quantity <= 64) {
                 nt->set_quantity(nt->get_quantity() + quantity);
                 quantity = 0;
+                this->slot[idx[i]] = nt;
             }
             else {
                 quantity = quantity + nt->get_quantity() - 64;
                 nt->set_quantity(64);
+                this->slot[idx[i]] = nt;
+                i++;
             }
-            this->slot[idx[i]] = nt;
         }
     }
-    
 }
 
 void Inventory::discard(int idx, int quantity) {

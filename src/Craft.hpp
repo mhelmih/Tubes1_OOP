@@ -16,19 +16,29 @@
 class Craft {
     private:
         vector<Item*> slot;
-        string curName[9];
+        string **curCraft;
+        bool isMirrored;
     public:
         
         Craft(); //diisi sama item "null" (dibuat pake default constructor)
         ~Craft();
 
         Item* &operator[](int idx);
-        // vector<int> isIn(string name); // mencari semua indeks kemunculan item dengan nama name
-        // bool isFull();
-        // void give(NonTool item, int quantity);
-        // void give(Tool item);
-        // void discard(int idx, int quantity);
-        // void use(int idx);
+        string** getCurCraft();
+        
+
+        //vector<int> isIn(string name); // mencari semua indeks kemunculan item dengan nama name
+        bool isFull();
+        void emptyingCraft();
+
+        void setIsMirrored(bool flag);
+        bool getIsMirrored();
+
+        int emptyRow();
+        int emptyCol();
+
+        //void give(NonTool item, int quantity);
+        //void give(Tool item);
 
 
         

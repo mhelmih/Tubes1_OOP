@@ -44,10 +44,6 @@ string Item::get_type() const {
     return this->type;
 }
 
-
-
-
-
 // Class Tool
 Tool::Tool() : Item() {
     this->durability = -1;
@@ -95,7 +91,17 @@ Tool& Tool::operator+(const Tool& other) {
 }
 
 void Tool::printInfo() {
-    cout << this->id << " " << this->durability;
+    if (this->id < 10) {
+        cout << "0" << this->id;
+    } else {
+        cout << this->id;
+    }
+    cout  << " ";
+    if (this->durability < 10) {
+        cout << "0" << this->durability;
+    } else {
+        cout << this->durability;
+    }
 }
 
 
@@ -140,5 +146,15 @@ NonTool& NonTool::operator+(const NonTool& other) {
     return *temp;
 }
 void NonTool::printInfo() {
-    cout << this->id << " " << this->quantity;
+    if (this->id < 10) {
+        cout << "0" << this->id;
+    } else {
+        cout << this->id;
+    }
+    cout  << " ";
+    if (this->quantity < 10) {
+        cout << "0" << this->quantity;
+    } else {
+        cout << this->quantity;
+    }
 }
