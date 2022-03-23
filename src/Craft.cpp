@@ -3,11 +3,9 @@
 Craft::Craft(){
     
     slot.assign(9, 0);
-    // slot[0] = new Tool();
-    // Tool* tool = slot[0];
-    // tool->get_durability();
-    // Tool* tool = dynamic_cast<Tool*>(slot[0]);
-    // tool->get_durability();
+    for(int i=0; i<9; i++){
+        this->curName[i] = "";
+    }
 }
 
 Craft::~Craft(){
@@ -15,14 +13,6 @@ Craft::~Craft(){
         delete[] item;
     }
     this->slot.clear();
-}
-
-bool Craft::isRecipe(){
-    return true;
-}
-
-void Craft::show(){
-    cout << "test";
 }
 
 Item* &Craft::operator[](int idx) {

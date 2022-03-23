@@ -47,18 +47,33 @@ void Inventory::give(Tool* item) {
 void Inventory::give(NonTool* item, int quantity) {
     vector<int> idx = isIn(item->get_name());
     int i = 0;
-    while (idx.size() > 0 && quantity > 0) {
-        NonTool* nt = dynamic_cast<NonTool*>(this->slot[idx[i]]);
-        if (nt->get_quantity() + quantity <= 64) {
-            nt->set_quantity(nt->get_quantity() + quantity);
-            quantity = 0;
+    // if there's no item found
+    if (idx.size() == 0) {
+        int invIdx = 0;
+        bool found = false;
+        while (invIdx < INVENTORY_SLOT && !found) {
+            if (this->slot[invIdx] != 0) {
+                found = true;
+            } else {
+                invIdx++;
+            }
         }
-        else {
-            quantity = quantity + nt->get_quantity() - 64;
-            nt->set_quantity(64);
+        this->slot[i] = item;
+    } else {
+        while (idx.size() > 0 && quantity > 0) {
+            NonTool* nt = dynamic_cast<NonTool*>(this->slot[idx[i]]);
+            if (nt->get_quantity() + quantity <= 64) {
+                nt->set_quantity(nt->get_quantity() + quantity);
+                quantity = 0;
+            }
+            else {
+                quantity = quantity + nt->get_quantity() - 64;
+                nt->set_quantity(64);
+            }
+            this->slot[idx[i]] = nt;
         }
-        this->slot[idx[i]] = nt;
     }
+    
 }
 
 void Inventory::discard(int idx, int quantity) {
@@ -69,7 +84,7 @@ void Inventory::discard(int idx, int quantity) {
             this->slot[idx] = nt;
         }
         else {
-            this->slot.erase(slot.begin() + idx);
+            this->slot[idx] = 0;
         }
     }
     else {

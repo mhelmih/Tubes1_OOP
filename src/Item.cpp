@@ -95,7 +95,7 @@ Tool& Tool::operator+(const Tool& other) {
 }
 
 void Tool::printInfo() {
-    cout << this->durability;
+    cout << this->id << " " << this->durability;
 }
 
 
@@ -140,5 +140,5 @@ NonTool& NonTool::operator+(const NonTool& other) {
     return *temp;
 }
 void NonTool::printInfo() {
-    cout << this->quantity;
+    cout << this->id << " " << this->quantity;
 }

@@ -16,16 +16,12 @@
 class Craft {
     private:
         vector<Item*> slot;
-        //Atribut buat pengecekan
-        string curName[3][3];
+        string curName[9];
     public:
         
         Craft(); //diisi sama item "null" (dibuat pake default constructor)
         ~Craft();
 
-        bool isRecipe();
-        void show();
-        // void Crafting();
         Item* &operator[](int idx);
         // vector<int> isIn(string name); // mencari semua indeks kemunculan item dengan nama name
         // bool isFull();
@@ -35,7 +31,7 @@ class Craft {
         // void use(int idx);
 
 
-        //Keperluan read recipe sementara
+        
         
 };
 

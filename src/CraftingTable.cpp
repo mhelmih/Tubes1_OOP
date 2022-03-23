@@ -141,7 +141,7 @@ void CraftingTable::show() {
         }
         cout << "[0" << crfIdx + 1 << "|";
         if (!crf[crfIdx]->isA<Tool>() && !crf[crfIdx]->isA<NonTool>()) {
-            cout << "- -";
+            cout << "-- --";
         } else{
             crf[crfIdx]->printInfo();
         }
@@ -161,7 +161,7 @@ void CraftingTable::show() {
         }
         
         if (!inv[invIdx]->isA<Tool>() && !inv[invIdx]->isA<NonTool>()) {
-            cout << "- -";
+            cout << "-- --";
         } else{
             inv[invIdx]->printInfo();
         }
