@@ -76,7 +76,7 @@ class CraftingTable {
          * DISCARD <INVENTORY_SLOT_ID> <ITEM_QTY>
          * Contoh: DISCARD I0 32
          */
-        void discard(int invId, int qty);
+        void discard();
 
         /**
          * Memindahkan Item ke slot crafting. Satu jenis item dapat dipindahkan ke beberapa 
@@ -162,7 +162,7 @@ class CraftingTable {
          * EXPORT <NAMA_FILE>
          * EXPORT inventory.txt
          */
-        void exportInventory();
+        void exportInventory(string outputPath);
 
     public:
         CraftingTable();

@@ -1,6 +1,6 @@
 #ifndef ITEM_HPP
 #define ITEM_HPP
-
+#include <iostream>
 #include <string>
 
 using namespace std;
@@ -19,7 +19,11 @@ class Item {
         int get_id() const;
         string get_name() const;
         string get_type() const;
+        void set_id(int id);
+        void set_name(string name);
+        void set_type(string type);
         virtual void printInfo()=0;
+        virtual string printExport()=0;
         // virtual int get_quantity();
         template<typename T>
         bool isA(){
@@ -42,6 +46,7 @@ class Tool : public Item {
         void use();
         Tool& operator+(const Tool& other);
         void printInfo();
+        string printExport();
 };
 
 
@@ -58,6 +63,7 @@ class NonTool : public Item {
         void set_quantity(int quantity);
         NonTool& operator+(const NonTool& other);
         void printInfo();
+        string printExport();
 };
 
 #endif

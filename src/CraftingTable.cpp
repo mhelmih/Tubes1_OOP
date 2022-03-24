@@ -71,7 +71,7 @@ void CraftingTable::readConfig() {
     ifstream itemConfigFile(this->itemConfigPath);
     for (string line; getline(itemConfigFile, line);) {
         // menghapus newline
-        line.pop_back();
+        line.erase(std::remove(line.begin(), line.end(), '\n'), line.end());
         // split line
         while ((pos = line.find(delimiter)) != string::npos) {
             words.push_back(line.substr(0, pos));
@@ -96,7 +96,8 @@ void CraftingTable::readConfig() {
 
         // split line setiap file config
         for (string line; getline(itemConfigRecipe, line);) {
-
+             // menghapus newline
+            line.erase(std::remove(line.begin(), line.end(), '\n'), line.end());
             while ((pos = line.find(delimiter)) != string::npos) {
                 wordsrecipe.push_back(line.substr(0, pos));
                 line.erase(0, pos + delimiter.length());
@@ -215,10 +216,10 @@ void CraftingTable::give() {
     }
 
     if (found) {
-        if (listItemConfig[i].get_category() == "TOO") {
+        if (listItemConfig[i].get_category() == "TOOL") {
             Tool* itm = new Tool(listItemConfig[i].get_id(), listItemConfig[i].get_name(), listItemConfig[i].get_type());
             inv.give(itm);
-        } else if (listItemConfig[i].get_category() == "NONTOO") {
+        } else if (listItemConfig[i].get_category() == "NONTOOL") {
             cin >> itemQty;
             NonTool* itm = new NonTool(listItemConfig[i].get_id(), listItemConfig[i].get_name(), listItemConfig[i].get_type(), itemQty);
             inv.give(itm, itemQty);
@@ -231,7 +232,13 @@ void CraftingTable::give() {
     
 }
 
-void CraftingTable::discard(int invId, int qty) {
+void CraftingTable::discard() {
+    string invSlot;
+    int qty, invId = 0;
+    cin >> invSlot >> qty;
+    for (int i = 1; i < invSlot.length(); i++) {
+        invId = invId * 10 + (invSlot[i] - '0');
+    }
     inv.discard(invId, qty);
 }
 
@@ -251,9 +258,9 @@ void CraftingTable::moveToCraft(int invIdx, int* crfIdx){
     for (int i=0; i < size; i++) {
         if (this->crf[crfIdx[i]] == 0) {
             this->crf[crfIdx[i]] = this->inv[invIdx];
-            if(this->inv[invIdx]->get_type() == "TOO"){
+            if(this->inv[invIdx]->get_type() == "TOOL"){
                 this->inv[invIdx] = 0;
-            } else if (this->inv[invIdx]->get_type() == "NONTOO"){
+            } else if (this->inv[invIdx]->get_type() == "NONTOOL"){
                 NonTool* nt = dynamic_cast<NonTool*>(this->inv[invIdx]);
                 nt->set_quantity(nt->get_quantity() - 1);
             };
@@ -268,7 +275,7 @@ void CraftingTable::moveToCraft(int invIdx, int* crfIdx){
 void CraftingTable::movetoStack(int invIdxSrc, int invIdxDest){
     string tipeSrc = this->inv[invIdxSrc]->get_type();
     string tipeDest = this->inv[invIdxDest]->get_type();
-    if (tipeSrc == "NONTOO" && tipeDest == "NONTOO") {
+    if (tipeSrc == "NONTOOL" && tipeDest == "NONTOOL") {
         NonTool* ntSrc = dynamic_cast<NonTool*>(this->inv[invIdxSrc]);
         NonTool* ntDest = dynamic_cast<NonTool*>(this->inv[invIdxDest]);
         if (ntSrc->get_name() == ntDest->get_name()) {
@@ -370,10 +377,10 @@ void CraftingTable::craft() {
         }
 
         if (found) {
-            if (listItemConfig[i].get_category() == "TOO") {
+            if (listItemConfig[i].get_category() == "TOOL") {
                 Tool* itm = new Tool(listItemConfig[i].get_id(), listItemConfig[i].get_name(), listItemConfig[i].get_type());
                 inv.give(itm);
-            } else if (listItemConfig[i].get_category() == "NONTOO") {
+            } else if (listItemConfig[i].get_category() == "NONTOOL") {
                 NonTool* itm = new NonTool(listItemConfig[i].get_id(), listItemConfig[i].get_name(), listItemConfig[i].get_type(), itemQty);
                 inv.give(itm, itemQty);
             } else {
@@ -386,8 +393,19 @@ void CraftingTable::craft() {
         cout << "recipe not found";
     }
 }
-void CraftingTable::exportInventory() {
-    cout << "TODO" << endl;
+
+void CraftingTable::exportInventory(string outputPath) {
+    ofstream outputFile(outputPath);
+    int invIdx = 0;
+    while (invIdx < INVENTORY_SLOT){
+        if (!inv[invIdx]->isA<Tool>() && !inv[invIdx]->isA<NonTool>()) {
+            outputFile << "0:0";
+        } else{
+            outputFile<< inv[invIdx]->printExport();
+        }
+        outputFile<<endl;
+        invIdx++;
+    }
 }
 
 void CraftingTable::readCommand() {
@@ -405,7 +423,7 @@ void CraftingTable::readCommand() {
         } else if (command == "GIVE") {
             give();
         } else if (command == "DISCARD") {
-            cout << "TODO" << endl;
+            discard();
         }else if (command == "MOVE") {
             string slotSrc;
             int slotQty;
@@ -449,7 +467,10 @@ void CraftingTable::readCommand() {
         } else if (command == "CRAFT") {
             cout << "TODO" << endl;
         } else if (command == "EXPORT") {
-            cout << "TODO" << endl;
+            string outputPath;
+            cout << "masukkan nama file: ";
+            cin >> outputPath;
+            exportInventory(outputPath);
         } else {
             cout << "Invalid command" << endl;
         }
