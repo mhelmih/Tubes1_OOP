@@ -7,7 +7,7 @@ ItemConfig::ItemConfig()
     this->id = 0;
     this->name = "name";
     this->type = "-";
-    this->category = "tool/nontool";
+    this->category = "-";
 }
 ItemConfig::ItemConfig(int id, string name, string type, string category)
 {
