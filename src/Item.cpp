@@ -104,6 +104,11 @@ void Tool::printInfo() {
     }
 }
 
+string Tool::printExport()
+{
+    string stringexp = to_string(this->id) + ":" + to_string(this->durability);
+    return stringexp;
+}
 
 // class NonTool
 NonTool::NonTool() : Item() {
@@ -157,4 +162,9 @@ void NonTool::printInfo() {
     } else {
         cout << this->quantity;
     }
+}
+
+string NonTool::printExport(){
+    string stringexp =  to_string(this->id)  + ":" + to_string(this->quantity);
+    return stringexp;
 }
