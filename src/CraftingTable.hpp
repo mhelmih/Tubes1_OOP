@@ -76,7 +76,7 @@ class CraftingTable {
          * DISCARD <INVENTORY_SLOT_ID> <ITEM_QTY>
          * Contoh: DISCARD I0 32
          */
-        void discard(int invId, int qty);
+        void discard();
 
         /**
          * Memindahkan Item ke slot crafting. Satu jenis item dapat dipindahkan ke beberapa 
