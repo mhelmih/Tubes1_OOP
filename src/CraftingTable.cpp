@@ -471,7 +471,9 @@ void CraftingTable::craft() {
     }
 }
 
-void CraftingTable::exportInventory(string outputPath) {
+void CraftingTable::exportInventory() {
+    string outputPath;
+    cin >> outputPath;
     ofstream outputFile(outputPath);
     int invIdx = 0;
     while (invIdx < INVENTORY_SLOT){
@@ -508,10 +510,7 @@ void CraftingTable::readCommand() {
         } else if (command == "CRAFT") {
             craft();
         } else if (command == "EXPORT") {
-            string outputPath;
-            cout << "masukkan nama file: ";
-            cin >> outputPath;
-            exportInventory(outputPath);
+            exportInventory();
         } else {
             cout << "Invalid command" << endl;
         }

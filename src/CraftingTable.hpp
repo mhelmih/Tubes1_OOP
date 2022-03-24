@@ -162,7 +162,7 @@ class CraftingTable {
          * EXPORT <NAMA_FILE>
          * EXPORT inventory.txt
          */
-        void exportInventory(string outputPath);
+        void exportInventory();
 
         void move();
 

@@ -42,7 +42,7 @@ void Inventory::give(Tool* item) {
         }
     }
     if (i == INVENTORY_SLOT) {
-        cout << "Slot Inventory sudah penuh" << endl;
+        cout << "Omg!! Your burden is too much dude, you can't add this item" << endl;
     }
     else {
         this->slot[i] = item;
@@ -66,7 +66,7 @@ void Inventory::give(NonTool* item, int quantity) {
                 }
             }
             if (invIdx == INVENTORY_SLOT) {
-                cout << "Slot inventory sudah penuh" << endl;
+                cout << "Omg!! Your burden is too much dude, you can't add this item" << endl;
             }
             else {
                 NonTool* nt = new NonTool();
@@ -107,15 +107,20 @@ void Inventory::discard(int idx, int quantity) {
             }
         }
         else {
-            this->slot[idx] = 0;
+            cout << "The number of items you want to remove is excessive!! Please check the slot first." << endl;
         }
     }
     else {
-        if (this->slot[idx ]== 0) {
-            cout << "Tidak ada item di dalam slot ini" << endl;
+        if (this->slot[idx] == 0) {
+            cout << "Oops! there's no item in this slot." << endl;
         }
         else {
-            cout << "Tidak bisa membuang item tool dengan kauntitas yang diberikan" << endl;
+            if (quantity == 1) {
+                this->slot[idx] = 0;
+            }
+            else if (quantity > 1) {
+                cout << "The number of items you want to remove is excessive!! Please check the slot first." << endl;
+            }
         }
     }
 }
