@@ -104,6 +104,11 @@ void Inventory::discard(int idx, int quantity) {
         }
     }
     else {
-        cout << "Tidak bisa membuang item tool dengan kauntitas yang diberikan" << '\n';
+        if (this->slot[idx ]== 0) {
+            cout << "Tidak ada item di dalam slot ini" << endl;
+        }
+        else {
+            cout << "Tidak bisa membuang item tool dengan kauntitas yang diberikan" << endl;
+        }
     }
 }
