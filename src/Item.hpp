@@ -19,6 +19,9 @@ class Item {
         int get_id() const;
         string get_name() const;
         string get_type() const;
+        void set_id(int id);
+        void set_name(string name);
+        void set_type(string type);
         virtual void printInfo()=0;
         virtual string printExport()=0;
         // virtual int get_quantity();
