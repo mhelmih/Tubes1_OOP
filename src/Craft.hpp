@@ -22,20 +22,21 @@ class Craft {
         
         Craft(); //diisi sama item "null" (dibuat pake default constructor)
         ~Craft();
-
-        Item* &operator[](int idx);
-        string** getCurCraft();
         
-
-        //vector<int> isIn(string name); // mencari semua indeks kemunculan item dengan nama name
         bool isFull();
         void emptyingCraft();
 
         void setIsMirrored(bool flag);
         bool getIsMirrored();
 
-        int emptyRow();
-        int emptyCol();
+        bool emptyRow(int idx);
+        bool emptyCol(int idx);
+
+        void swapCol(string** str); // Swap columns 1 and 3
+
+        Item* &operator[](int idx);
+        string** getCurCraft();
+        string** getOptimizedCrft();
 
         //void give(NonTool item, int quantity);
         //void give(Tool item);

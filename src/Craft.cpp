@@ -30,13 +30,15 @@ Item* &Craft::operator[](int idx) {
 }
 
 string** Craft::getCurCraft(){
+    int k = 0;
     for(int i=0; i<CRAFT_ROW; i++){
-        for(int j=0; j>CRAFT_COL; j++){
-            if(this->slot[i]!=0){
-                this->curCraft[i][j] = slot[i]->get_name();
+        for(int j=0; j<CRAFT_COL; j++){
+            if(this->slot[k]!=0){
+                this->curCraft[i][j] = slot[k]->get_name();
             }else{
                 this->curCraft[i][j] = "-";
             }
+            k++;
         }
     }
 
@@ -69,4 +71,85 @@ void Craft::setIsMirrored(bool flag){
 
 bool Craft::getIsMirrored(){
     return this->isMirrored;
+}
+
+bool Craft::emptyRow(int idx){
+    string **craftSlot = getCurCraft();
+    int count = 0;
+    for(int j=0; j<CRAFT_COL; j++){
+        if(craftSlot[idx][j]=="-"){
+            count++;
+        }
+    }
+    if(count==3){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool Craft::emptyCol(int idx){
+    string **craftSlot = getCurCraft();
+    int count = 0;
+    for(int i=0; i<CRAFT_ROW; i++){
+        if(craftSlot[i][idx]=="-"){
+            count++;
+        }
+    }
+    if(count==3){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+void Craft::swapCol(string** str){
+    if(emptyCol(0) && !emptyCol(2)){
+        for(int i=0;i<CRAFT_ROW;i++){
+            string temp = str[i][0];
+            str[i][0] = str[i][2];
+            str[i][2] = temp;
+        }
+    }
+}
+
+string** Craft::getOptimizedCrft(){
+    swapCol(curCraft);
+    if((emptyRow(1) || emptyCol(1)) && (!emptyCol(0) && !emptyCol(2))){
+        return curCraft;
+    }else{
+        int newRow = CRAFT_ROW;
+        int newCol = CRAFT_COL;
+        for(int i=0;i<3;i++){
+            if(emptyRow(i)){
+                newRow-=1;
+            }
+            if(emptyCol(i)){
+                newCol-=1;
+            }
+        }
+
+        string** newCraft = new string*[newRow];
+        for(int i=0;i<newRow;i++){
+            newCraft[i] = new string[newCol];
+        }
+
+        int rIdx = 0;
+        int cIdx = 0; 
+        bool flag = false;
+        for(int i=0;i<CRAFT_ROW;i++){
+            for(int j=0;j<CRAFT_COL;j++){
+                if(curCraft[i][j]!="-"){
+                    newCraft[rIdx][cIdx] = curCraft[i][j];
+                    cIdx++;
+                    flag=true;
+                }
+            }
+            if(flag && rIdx < newRow){
+                rIdx++;
+            }
+        }
+
+        return newCraft;
+    }
 }
