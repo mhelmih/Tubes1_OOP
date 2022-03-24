@@ -67,6 +67,7 @@ public:
     ~ListItemConfig();
     void addElmt(ItemConfig elemen);
     void printList();
+    int get_Neff() const;
     ItemConfig operator[](int index);
 };
 
@@ -81,6 +82,7 @@ public:
     ~ListRecipe();
     void addRecipe(const ItemRecipe &elemen);
     void printListRecipe();
+    int get_Neff() const;
     ItemRecipe operator[](int index);
 };
 

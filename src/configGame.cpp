@@ -20,10 +20,16 @@ ItemConfig::ItemConfig(int id, string name, string type, string category)
 
 void ItemConfig::print()
 {
-    cout << "id      : " << this->id << endl;
-    cout << "name    : " << this->name << endl;
-    cout << "type    : " << this->type << endl;
-    cout << "category: " << this->category << endl;
+    cout << this->id << " ";
+    if (this->id < 10) {
+        cout << " ";
+    } 
+    cout << "| ";
+    cout << this->name << " ";
+    cout << "| ";
+    cout << this->type << " ";
+    cout << "| ";
+    cout << this->category << endl;
 }
 
 void ItemConfig::set_id(int id)
@@ -175,17 +181,18 @@ string ItemRecipe::get_item(){
 
 void ItemRecipe::printRecipe()
 {
-    cout << "row     : " << this->row << endl;
-    cout << "col     : " << this->col << endl;
-    cout << "matrix  : " <<endl;
+    cout << "Name: " << this->itemCraft << " (" << this->quantity << ")" << endl;
+    cout << "    Row: " << this->row << " Col: " << this->col << endl;
     for (int i =0;i<this->row;i++){
         for (int j =0;j<this->col;j++){
+            if (j == 0) {
+                cout << "    ";
+            }
             cout << this->matrix[i][j] << " "; 
         }
         cout << endl;
     }
-    cout << "item    : " << this->itemCraft << endl;
-    cout << "quantity: " << this->quantity<< endl;
+    cout << "---------------------------------------" << endl;
 }
 
 
@@ -211,10 +218,17 @@ void ListItemConfig::addElmt(ItemConfig elemen) {
 }
 
 void ListItemConfig::printList(){
+    cout << "ID | ITEM NAME | ITEM TYPE | CATEGORY" << endl;
+    cout << "-------------------------------------" << endl;
     for (int i =0;i<this->Neff;i++){
         this->listconfig[i].print();
     }
 }
+
+int ListItemConfig::get_Neff() const {
+    return this->Neff;
+}
+
 ItemConfig ListItemConfig::operator[](int index){
     // sesuai id
     return this->listconfig[index-1];
@@ -256,10 +270,20 @@ void ListRecipe::addRecipe(const ItemRecipe &elemen) {
 
 void ListRecipe::printListRecipe(){
     for (int i = 0; i< this->Neff;i++){
+        cout << i+1;
+        if (i < 9) {
+            cout << ".  ";
+        } else {
+            cout << ". ";
+        }
         this->listRecipe[i].printRecipe();
     }
-
 }
+
+int ListRecipe::get_Neff() const {
+    return this->Neff;
+}
+
 ItemRecipe ListRecipe::operator[](int index){
     if (index >= this->Neff) {
         throw "index out of range list";

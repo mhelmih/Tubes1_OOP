@@ -7,13 +7,17 @@
 #include "Craft.cpp"
 #include "Item.cpp"
 #include "configGame.cpp"
-
+#include "CraftingTable.cpp"
+#include "Inventory.cpp"
 using namespace std;
 
 int main() {
     // Inventory tes;
-    Craft a;
-    a.slot[0]->printInfo();
-    cout << "Tes" << endl;
+    // Craft a;
+    // a[0]->printInfo();
+    // cout << "Tes" << endl;
+    CraftingTable ct;
+    ct.readConfig();
+    ct.readCommand();
     return 0;
 }

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sstream>
 
 #include "configGame.hpp"
 #include "Craft.hpp"
@@ -62,7 +63,7 @@ class CraftingTable {
          * GIVE <ITEM_NAME> <ITEM_QTY>
          * Contoh: GIVE OAK_WOOD 10
          */
-        void give(Item itm, int qty);
+        void give();
 
         /**
          * Membuang item di slot inventory dengan kuantitas yang diberikan. 
@@ -75,7 +76,7 @@ class CraftingTable {
          * DISCARD <INVENTORY_SLOT_ID> <ITEM_QTY>
          * Contoh: DISCARD I0 32
          */
-        void discard(int invId, int qty);
+        void discard();
 
         /**
          * Memindahkan Item ke slot crafting. Satu jenis item dapat dipindahkan ke beberapa 
@@ -89,7 +90,7 @@ class CraftingTable {
          * MOVE <INVENTORY_SLOT_ID> N <CRAFTING_SLOT_ID_1> ... <CRAFTING SLOT_ID_N>
          * Contoh: MOVE I0 N C0 C1 C2 ... CN
          */
-        void moveToCraft(int invIdx, int qty, int crfId); //ini parameternya gatau harus apa
+        void moveToCraft(int invIdx, int* crfId); //ini parameternya gatau harus apa
 
         /**
          * Menumpuk Item. Dua buah item non tool yang sama pada inventory dapat ditumpuk.
@@ -131,7 +132,7 @@ class CraftingTable {
          * USE <INVENTORY_SLOT_ID>
          * Contoh: USE I0
          */
-        void use(int invIdx);
+        void use();
 
         /**
          * Craft Item. Jika terdapat resep yang memenuhi, Item bahan akan hilang dan 
