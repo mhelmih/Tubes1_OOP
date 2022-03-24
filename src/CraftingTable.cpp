@@ -231,7 +231,14 @@ void CraftingTable::give() {
     
 }
 
-void CraftingTable::discard(int invId, int qty) {
+void CraftingTable::discard() {
+    string invSlot;
+    int qty, invId = 0;
+    cin >> invSlot >> qty;
+    for (int i = 1; i < invSlot.length(); i++) {
+        invId = invId * 10 + (invSlot[i] - '0');
+    }
+    cout << invId << endl;
     inv.discard(invId, qty);
 }
 
@@ -405,6 +412,7 @@ void CraftingTable::readCommand() {
         } else if (command == "GIVE") {
             give();
         } else if (command == "DISCARD") {
+            discard();
             cout << "TODO" << endl;
         }else if (command == "MOVE") {
             string slotSrc;
