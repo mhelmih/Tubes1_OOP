@@ -44,6 +44,16 @@ string Item::get_type() const {
     return this->type;
 }
 
+void Item::set_id(int id) {
+    this->id = id;
+}
+void Item::set_name(string name) {
+    this->name = name;
+}
+void Item::set_type(string type) {
+    this->type = type;
+}
+
 // Class Tool
 Tool::Tool() : Item() {
     this->durability = -1;
