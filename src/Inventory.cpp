@@ -111,11 +111,11 @@ void Inventory::discard(int idx, int quantity) {
         }
     }
     else {
-        if (this->slot[idx ]== 0) {
+        if (this->slot[idx]== 0) {
             cout << "Tidak ada item di dalam slot ini" << endl;
         }
         else {
-            cout << "Tidak bisa membuang item tool dengan kauntitas yang diberikan" << endl;
+            this->slot[idx] = 0;
         }
     }
 }
