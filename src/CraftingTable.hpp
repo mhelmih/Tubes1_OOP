@@ -90,7 +90,7 @@ class CraftingTable {
          * MOVE <INVENTORY_SLOT_ID> N <CRAFTING_SLOT_ID_1> ... <CRAFTING SLOT_ID_N>
          * Contoh: MOVE I0 N C0 C1 C2 ... CN
          */
-        void moveToCraft(int invIdx, int* crfId); //ini parameternya gatau harus apa
+        void moveToCraft(int invIdx, int* crfId, int qty); //ini parameternya gatau harus apa
 
         /**
          * Menumpuk Item. Dua buah item non tool yang sama pada inventory dapat ditumpuk.
@@ -163,6 +163,8 @@ class CraftingTable {
          * EXPORT inventory.txt
          */
         void exportInventory(string outputPath);
+
+        void move();
 
     public:
         CraftingTable();

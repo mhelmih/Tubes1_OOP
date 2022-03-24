@@ -252,58 +252,134 @@ void CraftingTable::discard() {
 //     cout << "TODO" << endl;
 // }
 
-void CraftingTable::moveToCraft(int invIdx, int* crfIdx){
-    string tipeInv = this->inv[invIdx]->get_type();
-    int size = sizeof(crfIdx) / sizeof(crfIdx[0]);
-    for (int i=0; i < size; i++) {
-        if (this->crf[crfIdx[i]] == 0) {
-            this->crf[crfIdx[i]] = this->inv[invIdx];
-            if(this->inv[invIdx]->get_type() == "TOOL"){
-                this->inv[invIdx] = 0;
-            } else if (this->inv[invIdx]->get_type() == "NONTOOL"){
-                NonTool* nt = dynamic_cast<NonTool*>(this->inv[invIdx]);
-                nt->set_quantity(nt->get_quantity() - 1);
-            };
-        } else {
-            //sudah terisi
-            cout << "slot crafting sudah terisi" << endl;
-        }
+void CraftingTable::move() {
+    string* multislotDest;
+    string slotSrc, source, destination;
+    int* idxDest;
+    int slotQty, idxSrc;
+    
+    // need to handle multiple destinations
+    cin >> slotSrc >> slotQty;
+    
+    multislotDest = new string[slotQty];
+    for (int i=0; i<slotQty; i++) {
+        cin >> multislotDest[i];
     }
     
-
-}
-void CraftingTable::movetoStack(int invIdxSrc, int invIdxDest){
-    string tipeSrc = this->inv[invIdxSrc]->get_type();
-    string tipeDest = this->inv[invIdxDest]->get_type();
-    if (tipeSrc == "NONTOOL" && tipeDest == "NONTOOL") {
-        NonTool* ntSrc = dynamic_cast<NonTool*>(this->inv[invIdxSrc]);
-        NonTool* ntDest = dynamic_cast<NonTool*>(this->inv[invIdxDest]);
-        if (ntSrc->get_name() == ntDest->get_name()) {
-            if (ntSrc->get_quantity() + ntDest->get_quantity() <= 64) {
-                ntDest->set_quantity(ntSrc->get_quantity() + ntDest->get_quantity());
-                this->inv[invIdxSrc] = 0;
+    // string slicing to capture important keywords
+    source = slotSrc.substr(0,1);
+    idxSrc = stoi(slotSrc.substr(1,2));
+    destination = multislotDest[0].substr(0,1);
+    idxDest = new int[slotQty];
+    for (int i=0; i<slotQty; i++) {
+        idxDest[i] = stoi(multislotDest[i].substr(1,2));
+    }
+    
+    if (slotQty > 0) {
+        if (source == "C"){
+            moveToInventory(idxSrc, idxDest[0]);
+        } else if (source == "I") {
+            if (this->inv[idxSrc] == 0) {
+                cout << "I " << idxSrc << "is empty." << endl;
+            } else {
+                if (destination == "I") {
+                    if (slotQty == 1) {
+                        movetoStack(idxSrc, idxDest[0]);    
+                    } else {
+                        cout << "Wrong syntax." << endl;
+                    }
+                } else if (destination == "C" && slotQty) {
+                    // Tool harus 1
+                    if (this->inv[idxSrc]->isA<Tool>() && slotQty == 1) {
+                        moveToCraft(idxSrc, idxDest, slotQty);
+                    // NonTool harus <= quantity
+                    } else if (this->inv[idxSrc]->isA<NonTool>()) {
+                        NonTool* temp = dynamic_cast<NonTool*>(inv[idxSrc]);
+                        if (temp->get_quantity() >= slotQty) {
+                            moveToCraft(idxSrc, idxDest, slotQty);
+                        } else {
+                            cout << slotQty << " is too much." << endl;
+                        }
+                    } else {
+                        cout << slotQty << " is too much." << endl;
+                    }
+                } else {
+                    cout << "Wrong syntax." << endl;
+                }
             }
-            else {
-                ntDest->set_quantity(64);
-                ntSrc->set_quantity(ntSrc->get_quantity() - (64 - ntDest->get_quantity()));
-            }
-        } else {
-            cout << "invalid move" << endl;
         }
-    } else {
-        cout << "invalid move" << endl;
     }
 }
-void CraftingTable::moveToInventory(int crfIdx, int invIdx){
-    string tipeCraft = this->crf[crfIdx]->get_type();
-    string tipeInv = this->inv[invIdx]->get_type();
+
+void CraftingTable::moveToCraft(int invIdx, int* crfIdx, int qty){
     if (this->inv[invIdx] == 0) {
+        cout << "I " << invIdx << "is empty." << endl;
+    } else {
+        for (int i=0; i < qty; i++) {
+            if (this->crf[crfIdx[i]] == 0) {
+                if (this->inv[invIdx]->isA<Tool>()){
+                    Tool* temp = dynamic_cast<Tool*>(inv[invIdx]);
+                    Tool* temp1 = new Tool(*temp);
+                    this->crf[crfIdx[0]] = temp1;
+                    this->inv[invIdx] = 0;
+                } else if (this->inv[invIdx]->isA<NonTool>()){
+                    NonTool* temp = dynamic_cast<NonTool*>(inv[invIdx]);
+                    NonTool* temp1 = new NonTool(*temp);    
+                    temp1->set_quantity(1);
+                    this->crf[crfIdx[i]] = temp1;
+                    
+                    NonTool* nt = dynamic_cast<NonTool*>(this->inv[invIdx]);
+                    nt->set_quantity(nt->get_quantity() - 1);
+                    if (nt->get_quantity() == 0) {
+                        this->inv[invIdx] = 0;
+                    }
+                };
+            } else {
+                //sudah terisi
+                cout << "C" << crfIdx[i] << " is occupied." << endl;
+            }
+        }
+    }
+}
+
+void CraftingTable::movetoStack(int invIdxSrc, int invIdxDest){
+    if (this->inv[invIdxSrc] == 0) {
+        cout << "I" << invIdxSrc << "is empty." << endl;
+    } else {
+        if (this->inv[invIdxDest] == 0) {
+            this->inv[invIdxDest] = this->inv[invIdxSrc];
+            this->inv[invIdxSrc] = 0;
+        } else {
+            if (this->inv[invIdxSrc]->isA<NonTool>() && this->inv[invIdxDest]->isA<NonTool>()) {
+                NonTool* ntSrc = dynamic_cast<NonTool*>(this->inv[invIdxSrc]);
+                NonTool* ntDest = dynamic_cast<NonTool*>(this->inv[invIdxDest]);
+                if (ntSrc->get_name() == ntDest->get_name()) {
+                    if (ntSrc->get_quantity() + ntDest->get_quantity() <= 64) {
+                        ntDest->set_quantity(ntSrc->get_quantity() + ntDest->get_quantity());
+                        this->inv[invIdxSrc] = 0;
+                    }
+                    else {
+                        ntSrc->set_quantity(ntSrc->get_quantity() - (64 - ntDest->get_quantity()));
+                        ntDest->set_quantity(64);
+                    }
+                } else {
+                    cout << "Invalid move." << endl;
+                }
+            } else {
+                cout << "Invalid move." << endl;
+            }    
+        }   
+    }
+}
+
+void CraftingTable::moveToInventory(int crfIdx, int invIdx){
+    if (this->crf[crfIdx] == 0) {
+        //slot crafting kosong
+        cout << "C" << crfIdx << " is empty." << endl;
+    } else if (this->inv[invIdx] == 0) {
         this->inv[invIdx] = this->crf[crfIdx];
         this->crf[crfIdx] = 0;
-    } else if (this->crf[crfIdx] == 0) {
-        //slot crafting kosong
-        cout << "Crafting kosong" << endl;
-    } else if (tipeCraft == "NonTool" && tipeInv == "NonTool") {
+    } else if (this->crf[crfIdx]->isA<NonTool>() && this->inv[invIdx]->isA<NonTool>()) {
         if (this->crf[crfIdx]->get_name() == this->inv[invIdx]->get_name()) {
             NonTool* ntCraft = dynamic_cast<NonTool*>(this->crf[crfIdx]);
             NonTool* ntInv = dynamic_cast<NonTool*>(this->inv[invIdx]);
@@ -313,15 +389,14 @@ void CraftingTable::moveToInventory(int crfIdx, int invIdx){
             }
             else {
                 //full
-                cout << "Inventory Full" << endl;
+                cout << "I" << invIdx << " is full." << endl;
             }
         } else {
             //inventory ada isinya
-            cout << "Inventory sudah terisi" << endl;
+            cout << "Different type of NonTool" << endl;
         }
     } else {
-        //crafting ada isinya
-        cout << "Inventory sudah terisi" << endl;
+        cout << "Invalid move. I" << invIdx << " is a Tool." << endl;
     }
 }
 
@@ -332,6 +407,7 @@ void CraftingTable::use() {
 
     cin >> invIdx;
     invIdx = invIdx.substr(1,2);
+    
     idx = stoi(invIdx);
     if (idx < INVENTORY_SLOT) {
         if (inv[idx] == 0) {
@@ -350,13 +426,13 @@ void CraftingTable::use() {
     } else {
         cout << "Index out of range." << endl;
     }
-    
 }
+
 void CraftingTable::craft() {
     bool flag = false;
     int i = 0;
     while(i<listRecipeConfig.get_Neff() && !flag){
-        if(true){
+        if(crf.isRecipe(listRecipeConfig[i])){
             flag = true;
         }else{
             i++;
@@ -377,6 +453,7 @@ void CraftingTable::craft() {
         }
 
         if (found) {
+            crf.emptyingCraft();
             if (listItemConfig[i].get_category() == "TOOL") {
                 Tool* itm = new Tool(listItemConfig[i].get_id(), listItemConfig[i].get_name(), listItemConfig[i].get_type());
                 inv.give(itm);
@@ -425,47 +502,11 @@ void CraftingTable::readCommand() {
         } else if (command == "DISCARD") {
             discard();
         }else if (command == "MOVE") {
-            string slotSrc;
-            int slotQty;
-            string* multislotDest;
-            // need to handle multiple destinations
-            cin >> slotSrc >> slotQty;
-            
-            multislotDest = new string[slotQty];
-            for (int i=0; i<slotQty; i++) {
-                cin >> multislotDest[i];
-            }
-            
-            string source;
-            string destination;
-            int idxSrc;
-            int* idxDest;
-            
-            source = slotSrc[0];
-            idxSrc = stoi(slotSrc);
-            destination = multislotDest[0][0];
-            
-            idxDest = new int[slotQty];
-            for (int i=0; i<slotQty; i++) {
-                idxDest[i] = multislotDest[i][1];
-            }
-            
-            if (source == "C"){
-                moveToInventory(idxSrc, idxDest[0]);
-            } else if (source == "I") {
-                if (destination == "I") {
-                    movetoStack(idxSrc, idxDest[0]);
-                } else if (destination == "C") {
-                    moveToCraft(idxSrc, idxDest);
-                }
-            }
-            
-        
-            cout << "TODO" << endl;
+            move();
         } else if (command == "USE") {
             use();
         } else if (command == "CRAFT") {
-            cout << "TODO" << endl;
+            craft();
         } else if (command == "EXPORT") {
             string outputPath;
             cout << "masukkan nama file: ";

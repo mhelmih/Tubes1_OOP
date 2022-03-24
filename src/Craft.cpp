@@ -14,7 +14,8 @@ Craft::Craft(){
         }
         
     }
-    this->isMirrored = false;
+    this->optRow = 0;
+    this->optCol = 0;
 }
 
 Craft::~Craft(){
@@ -29,7 +30,7 @@ Item* &Craft::operator[](int idx) {
     return slot[idx];
 }
 
-string** Craft::getCurCraft(){
+void Craft::getCurCraft(){
     int k = 0;
     for(int i=0; i<CRAFT_ROW; i++){
         for(int j=0; j<CRAFT_COL; j++){
@@ -42,7 +43,7 @@ string** Craft::getCurCraft(){
         }
     }
 
-    return this->curCraft;
+    //return this->curCraft;
 }
 
 bool Craft::isFull(){
@@ -65,19 +66,20 @@ void Craft::emptyingCraft(){
     }
 }
 
-void Craft::setIsMirrored(bool flag){
-    this->isMirrored = flag;
-}
+// void Craft::setIsMirrored(bool flag){
+//     this->isMirrored = flag;
+// }
 
-bool Craft::getIsMirrored(){
-    return this->isMirrored;
-}
+// bool Craft::getIsMirrored(){
+//     return this->isMirrored;
+// }
 
 bool Craft::emptyRow(int idx){
-    string **craftSlot = getCurCraft();
+    //string **craftSlot = getCurCraft();
+    getCurCraft();
     int count = 0;
     for(int j=0; j<CRAFT_COL; j++){
-        if(craftSlot[idx][j]=="-"){
+        if(this->curCraft[idx][j]=="-"){
             count++;
         }
     }
@@ -89,10 +91,11 @@ bool Craft::emptyRow(int idx){
 }
 
 bool Craft::emptyCol(int idx){
-    string **craftSlot = getCurCraft();
+    //string **craftSlot = getCurCraft();
+
     int count = 0;
     for(int i=0; i<CRAFT_ROW; i++){
-        if(craftSlot[i][idx]=="-"){
+        if(this->curCraft[i][idx]=="-"){
             count++;
         }
     }
@@ -103,18 +106,19 @@ bool Craft::emptyCol(int idx){
     }
 }
 
-void Craft::swapCol(string** str){
+void Craft::swapCol(){
     if(emptyCol(0) && !emptyCol(2)){
         for(int i=0;i<CRAFT_ROW;i++){
-            string temp = str[i][0];
-            str[i][0] = str[i][2];
-            str[i][2] = temp;
+            string temp = this->curCraft[i][0];
+            this->curCraft[i][0] = this->curCraft[i][2];
+            this->curCraft[i][2] = temp;
         }
     }
 }
 
 string** Craft::getOptimizedCrft(){
-    swapCol(curCraft);
+    getCurCraft();
+    swapCol();
     if((emptyRow(1) || emptyCol(1)) && (!emptyCol(0) && !emptyCol(2))){
         return curCraft;
     }else{
@@ -138,9 +142,10 @@ string** Craft::getOptimizedCrft(){
         int cIdx = 0; 
         bool flag = false;
         for(int i=0;i<CRAFT_ROW;i++){
+            cIdx = 0; 
             for(int j=0;j<CRAFT_COL;j++){
                 if(curCraft[i][j]!="-"){
-                    newCraft[rIdx][cIdx] = curCraft[i][j];
+                    newCraft[rIdx][cIdx] = this->curCraft[i][j];
                     cIdx++;
                     flag=true;
                 }
@@ -149,7 +154,43 @@ string** Craft::getOptimizedCrft(){
                 rIdx++;
             }
         }
+        this->optRow = newRow;
+        this->optCol = newCol;
 
         return newCraft;
     }
+}
+
+bool Craft::isRecipe(ItemRecipe ls){
+    string** optCraft = getOptimizedCrft();
+    bool flag = false;
+    int row = ls.getRow();
+    int col = ls.getCol();
+
+    if((this->optRow != row) && (this->optCol != col)){
+        return false;
+    }else{
+        int i=0;
+        int j=0;
+        int count = 0;
+        while(!flag && i<row){
+            while(!flag && i<col){
+                if(optCraft[i][j]!=ls.getElement(i,j)){
+                    flag=true;
+                }
+                else{
+                    count++;
+                }
+                j++;
+            }
+            i++;
+        }
+
+        if(count == (row+col)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
 }

@@ -17,7 +17,9 @@ class Craft {
     private:
         vector<Item*> slot;
         string **curCraft;
-        bool isMirrored;
+
+        int optRow; // Optimized slot craft row
+        int optCol; // Optimized slot craft col
     public:
         
         Craft(); //diisi sama item "null" (dibuat pake default constructor)
@@ -25,17 +27,18 @@ class Craft {
         
         bool isFull();
         void emptyingCraft();
+        bool isRecipe(ItemRecipe ls);
 
-        void setIsMirrored(bool flag);
-        bool getIsMirrored();
+        // void setIsMirrored(bool flag);
+        // bool getIsMirrored();
 
         bool emptyRow(int idx);
         bool emptyCol(int idx);
 
-        void swapCol(string** str); // Swap columns 1 and 3
+        void swapCol(); // Swap columns 1 and 3
 
         Item* &operator[](int idx);
-        string** getCurCraft();
+        void getCurCraft();
         string** getOptimizedCrft();
 
         //void give(NonTool item, int quantity);
