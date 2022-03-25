@@ -1,26 +1,25 @@
-# Minecraft-Template
+# Minecraft Crafting Table
 
-Template repository for Tubes 1 IF2210 2021/2022. Feel free to replace this README with your own content.
+## Deskripsi program
+Program ini merupakan sebuah aplikasi berbasis Command Line Interface (CLI) untuk
+melakukan crafting seperti pada game Minecraft.
+Pada pembuatan program ini, digunakan konsep OOP atau Object-Oriented Programming
+yang sudah dipelajari di kelas. Program ditulis menggunakan bahasa C++.
+Program ini dibuat untuk memenuhi Tugas Besar 1 IF2210 Pemrograman Berorientasi Objek.
 
-## What's Inside
-This template consists of:
-- config folder containing all the config files (items and recipes)
-- tests folder containing two sample test files (input and answer)
-- main.cpp containing the sample main code
-- check.cpp containing the code for checking
-- makefile for compiling and testing
+## Requirement Program
+g++ compiler version 11.2.0 or higher
 
-## Running the Makefile
-Make sure you are using Linux with C++17. WSL also works if you are using Windows.
+## Cara Menggunakan Program
+Untuk menjalankan program, jalankan
 ```
-sudo apt-get install make g++
-make all
+main.exe
 ```
-Using the sample main file, it should return that 1 out of 2 tests passed.
 
-## Adding More Tests
-You can add more tests by adding more files to the tests folder. Tests consists of two files, input with "in" extension and answer with "ans" extension. Each test should have exactly one EXPORT command which exports the current inventory into an "out" file in the tests folder. Please refer to the sample tests. Checking will be done by comparing the answer file and the output file.
-
-As the test is done by comparing the output files, you can freely use standard output in your program.
-
-Automated testing will not work if you are using GUI (obviously).
+## Author
+### Kelompok 09 miripmenkrep K02
+1. 13520011 / Muhammad Akyas David Al Aleey
+2. 13520014 / Muhammad Helmi Hibatullah
+3. 13520026 / Muhammad Fajar Ramadhan
+4. 13520116 / Mahesa Lizardy
+5. 13520155 / Jundan Haris
