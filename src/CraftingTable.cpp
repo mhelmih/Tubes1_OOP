@@ -431,15 +431,17 @@ void CraftingTable::use() {
 void CraftingTable::craft() {
     bool flag = false;
     int i = 0;
+    //i<listRecipeConfig.get_Neff() ganti dlu buat debug
     while(i<listRecipeConfig.get_Neff() && !flag){
         if(crf.isRecipe(listRecipeConfig[i])){
             flag = true;
+            cout << "bener";
         }else{
             i++;
         }
     }
 
-    if(i<listRecipeConfig.get_Neff()){
+    if(flag){
         string itemName = listRecipeConfig[i].get_item();
         int itemQty = listRecipeConfig[i].get_quantity();
         int i=0;

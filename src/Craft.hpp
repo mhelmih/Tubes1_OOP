@@ -17,6 +17,9 @@ class Craft {
     private:
         vector<Item*> slot;
         string **curCraft;
+        string **optCraft;
+
+        bool namedBased;
 
         int optRow; // Optimized slot craft row
         int optCol; // Optimized slot craft col
@@ -38,8 +41,8 @@ class Craft {
         void swapCol(); // Swap columns 1 and 3
 
         Item* &operator[](int idx);
-        void getCurCraft();
-        string** getOptimizedCrft();
+        void updateCurCraft();
+        void updateOptimizedCrft();
 
         //void give(NonTool item, int quantity);
         //void give(Tool item);

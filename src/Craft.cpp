@@ -8,20 +8,36 @@ Craft::Craft(){
         this->curCraft[i] = new string[CRAFT_COL];
     }
 
+    this->optCraft= new string*[CRAFT_ROW];
+    for(int i =0;i<CRAFT_ROW; i++){
+        this->optCraft[i] = new string[CRAFT_COL];
+    }
+
     for(int i=0; i<CRAFT_ROW; i++){
         for(int j =0;j<CRAFT_COL;j++){
             this->curCraft[i][j] = "-";
         }
-        
     }
+
+    for(int i=0; i<CRAFT_ROW; i++){
+        for(int j =0;j<CRAFT_COL;j++){
+            this->optCraft[i][j] = "-";
+        }
+    }
+
     this->optRow = 0;
     this->optCol = 0;
+
+    this->namedBased = false;
+    
 }
 
 Craft::~Craft(){
     for (Item* item : this->slot) {
         delete[] item;
     }
+    delete[] this->curCraft;
+    delete[] this->optCraft;
     this->slot.clear();
 }
 
@@ -30,7 +46,7 @@ Item* &Craft::operator[](int idx) {
     return slot[idx];
 }
 
-void Craft::getCurCraft(){
+void Craft::updateCurCraft(){
     int k = 0;
     for(int i=0; i<CRAFT_ROW; i++){
         for(int j=0; j<CRAFT_COL; j++){
@@ -66,17 +82,8 @@ void Craft::emptyingCraft(){
     }
 }
 
-// void Craft::setIsMirrored(bool flag){
-//     this->isMirrored = flag;
-// }
-
-// bool Craft::getIsMirrored(){
-//     return this->isMirrored;
-// }
-
 bool Craft::emptyRow(int idx){
-    //string **craftSlot = getCurCraft();
-    getCurCraft();
+    updateCurCraft();
     int count = 0;
     for(int j=0; j<CRAFT_COL; j++){
         if(this->curCraft[idx][j]=="-"){
@@ -116,11 +123,20 @@ void Craft::swapCol(){
     }
 }
 
-string** Craft::getOptimizedCrft(){
-    getCurCraft();
+void Craft::updateOptimizedCrft(){
+    updateCurCraft();
+    
     swapCol();
+
+    // for(int i=0;i<3;i++){
+    //     for(int j=0; j<3;j++){
+    //         cout << this->curCraft[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
+
     if((emptyRow(1) || emptyCol(1)) && (!emptyCol(0) && !emptyCol(2))){
-        return curCraft;
+        this->optCraft = this->curCraft;
     }else{
         int newRow = CRAFT_ROW;
         int newCol = CRAFT_COL;
@@ -133,36 +149,49 @@ string** Craft::getOptimizedCrft(){
             }
         }
 
-        string** newCraft = new string*[newRow];
-        for(int i=0;i<newRow;i++){
-            newCraft[i] = new string[newCol];
-        }
+        if(newRow == 0 && newCol==0){
+            this->optCraft= new string*[CRAFT_ROW];
+            for(int i =0;i<CRAFT_ROW; i++){
+                this->optCraft[i] = new string[CRAFT_COL];
+            }
 
-        int rIdx = 0;
-        int cIdx = 0; 
-        bool flag = false;
-        for(int i=0;i<CRAFT_ROW;i++){
-            cIdx = 0; 
-            for(int j=0;j<CRAFT_COL;j++){
-                if(curCraft[i][j]!="-"){
-                    newCraft[rIdx][cIdx] = this->curCraft[i][j];
-                    cIdx++;
-                    flag=true;
+            for(int i=0; i<CRAFT_ROW; i++){
+                for(int j =0;j<CRAFT_COL;j++){
+                    this->optCraft[i][j] = "-";
                 }
             }
-            if(flag && rIdx < newRow){
-                rIdx++;
+        }else{
+            this->optCraft= new string*[newRow];
+            for(int i =0;i<newRow; i++){
+                this->optCraft[i] = new string[newCol];
             }
+            int rIdx = 0;
+            int cIdx = 0; 
+            bool flag = false;
+            for(int i=0;i<CRAFT_ROW;i++){
+                cIdx = 0; 
+                for(int j=0;j<CRAFT_COL;j++){
+                    if(curCraft[i][j]!="-"){
+                        this->optCraft[rIdx][cIdx] = this->curCraft[i][j];
+                        cIdx++;
+                        flag=true;
+                    }
+                }
+                if(flag && rIdx < newRow){
+                    rIdx++;
+                }
+            }
+            
+            
+            //return newCraft;
         }
         this->optRow = newRow;
         this->optCol = newCol;
-
-        return newCraft;
     }
 }
 
 bool Craft::isRecipe(ItemRecipe ls){
-    string** optCraft = getOptimizedCrft();
+    updateOptimizedCrft();
     bool flag = false;
     int row = ls.getRow();
     int col = ls.getCol();
@@ -174,8 +203,8 @@ bool Craft::isRecipe(ItemRecipe ls){
         int j=0;
         int count = 0;
         while(!flag && i<row){
-            while(!flag && i<col){
-                if(optCraft[i][j]!=ls.getElement(i,j)){
+            while(!flag && j<col){
+                if(this->optCraft[i][j]!=ls.getElement(i,j)){
                     flag=true;
                 }
                 else{
@@ -186,7 +215,7 @@ bool Craft::isRecipe(ItemRecipe ls){
             i++;
         }
 
-        if(count == (row+col)){
+        if(count == (row*col)){
             return true;
         }else{
             return false;
