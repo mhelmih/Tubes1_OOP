@@ -309,6 +309,7 @@ void CraftingTable::move() {
             }
         }
     }
+    show();
 }
 
 void CraftingTable::moveToCraft(int invIdx, int* crfIdx, int qty){
@@ -429,47 +430,66 @@ void CraftingTable::use() {
 }
 
 void CraftingTable::craft() {
-    bool flag = false;
-    int i = 0;
-    //i<listRecipeConfig.get_Neff() ganti dlu buat debug
-    while(i<listRecipeConfig.get_Neff() && !flag){
-        if(crf.isRecipe(listRecipeConfig[i])){
-            flag = true;
-            cout << "bener";
-        }else{
-            i++;
+    bool craftTool = false;
+    if (crf.idxSlotTool().size() == 2) { // Craft TOOL
+        craftTool = true;
+        int i = crf.idxSlotTool()[0];
+        int j = crf.idxSlotTool()[1];
+        Tool *srcTool = dynamic_cast<Tool *>(crf[i]);
+        Tool *dstTool = dynamic_cast<Tool *>(crf[j]);
+        if (srcTool->get_name() == dstTool->get_name()){
+            dstTool->set_durability(srcTool->get_durability() + dstTool->get_durability());
+            if (dstTool->get_durability() > 10) {
+                dstTool->set_durability(10);
+            }
+            inv.give(dstTool);
+            crf.emptyingCraft();
+        } else {
+            cout << "Two different type of tools can't be combined." << endl;
         }
-    }
-
-    if(flag){
-        string itemName = listRecipeConfig[i].get_item();
-        int itemQty = listRecipeConfig[i].get_quantity();
-        int i=0;
-        bool found=false;
-        while (i < listItemConfig.get_Neff() && !found) {
-            if (itemName == listItemConfig[i].get_name()) {
-                found = true;
+    } else if (crf.idxSlotTool().size() > 2) {
+        cout << "Too many tools at crafting table, max 2" << endl;
+    } else { // Craft NONTOOL
+        int i = 0;
+        bool flag = false;
+        while (i < listRecipeConfig.get_Neff() && !flag) {
+            if (crf.isRecipe(listRecipeConfig[i],true) || crf.isRecipe(listRecipeConfig[i],false)) {
+                flag = true;
             } else {
                 i++;
             }
         }
 
-        if (found) {
-            crf.emptyingCraft();
-            if (listItemConfig[i].get_category() == "TOOL") {
-                Tool* itm = new Tool(listItemConfig[i].get_id(), listItemConfig[i].get_name(), listItemConfig[i].get_type());
-                inv.give(itm);
-            } else if (listItemConfig[i].get_category() == "NONTOOL") {
-                NonTool* itm = new NonTool(listItemConfig[i].get_id(), listItemConfig[i].get_name(), listItemConfig[i].get_type(), itemQty);
-                inv.give(itm, itemQty);
-            } else {
-                cout << "Category " << listItemConfig[i].get_category() << " Unknown." << endl;
+        if(flag) {
+            string itemName = listRecipeConfig[i].get_item();
+            int itemQty = listRecipeConfig[i].get_quantity();
+            int j=0;
+            bool found=false;
+            while (i < listItemConfig.get_Neff() && !found) {
+                if (itemName == listItemConfig[j].get_name()) {
+                    found = true;
+                } else {
+                    j++;
+                }
+            }
+
+            if (found) {
+                crf.emptyingCraft();
+                if (listItemConfig[i].get_category() == "TOOL") {
+                    Tool* itm = new Tool(listItemConfig[i].get_id(), listItemConfig[i].get_name(), listItemConfig[i].get_type());
+                    inv.give(itm);
+                } else if (listItemConfig[i].get_category() == "NONTOOL") {
+                    NonTool* itm = new NonTool(listItemConfig[i].get_id(), listItemConfig[i].get_name(), listItemConfig[i].get_type(), itemQty);
+                    inv.give(itm, itemQty);
+                } else {
+                    cout << "Category " << listItemConfig[i].get_category() << " Unknown." << endl;
+                }
+                } else {
+                cout << "Item " << itemName << " not found." << endl;
             }
         } else {
-            cout << "Item " << itemName << " Not Found." << endl;
+            cout << "Recipe not found.";
         }
-    }else{
-        cout << "recipe not found";
     }
 }
 
@@ -478,12 +498,13 @@ void CraftingTable::exportInventory() {
     cin >> outputPath;
     ofstream outputFile(outputPath);
     int invIdx = 0;
-    while (invIdx < INVENTORY_SLOT){
-        if (!inv[invIdx]->isA<Tool>() && !inv[invIdx]->isA<NonTool>()) {
+    while (invIdx < INVENTORY_SLOT) {
+        if (!inv[invIdx]->isA<Tool>() && !inv[invIdx]->isA<NonTool>()) { // empty slot
             outputFile << "0:0";
-        } else{
+        } else {
             outputFile<< inv[invIdx]->printExport();
         }
+
         outputFile<<endl;
         invIdx++;
     }

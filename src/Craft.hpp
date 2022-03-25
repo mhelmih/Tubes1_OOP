@@ -2,8 +2,6 @@
 #define CRAFT_HPP
 
 #include <vector>
-#include <filesystem>
-#include <fstream>
 #include <iostream>
 #include <string>
 #include "Item.hpp"
@@ -20,6 +18,7 @@ class Craft {
         string **optCraft;
 
         bool namedBased;
+        int toolInSlot;
 
         int optRow; // Optimized slot craft row
         int optCol; // Optimized slot craft col
@@ -30,22 +29,17 @@ class Craft {
         
         bool isFull();
         void emptyingCraft();
-        bool isRecipe(ItemRecipe ls);
-
-        // void setIsMirrored(bool flag);
-        // bool getIsMirrored();
+        bool isRecipe(ItemRecipe ls,bool isName);
 
         bool emptyRow(int idx);
         bool emptyCol(int idx);
 
         void swapCol(); // Swap columns 1 and 3
+        vector<int> idxSlotTool();
 
         Item* &operator[](int idx);
         void updateCurCraft();
         void updateOptimizedCrft();
-
-        //void give(NonTool item, int quantity);
-        //void give(Tool item);
 
 
         

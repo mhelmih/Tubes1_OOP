@@ -92,12 +92,12 @@ void Tool::use() {
     this->durability -= 1;
 }
 
-Tool& Tool::operator+(const Tool& other) {
+Tool* Tool::operator+(const Tool* other) {
     Tool *temp = new Tool(*this);
-    temp->durability = this->durability + other.durability;
+    temp->durability = this->durability + other->durability;
     if (temp->durability > 10) temp->durability = 10;
 
-    return *temp;
+    return temp;
 }
 
 void Tool::printInfo() {

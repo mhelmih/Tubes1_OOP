@@ -44,7 +44,7 @@ class Tool : public Item {
         int get_durability() const;
         void set_durability(int durability);
         void use();
-        Tool& operator+(const Tool& other);
+        Tool* operator+(const Tool* other);
         void printInfo();
         string printExport();
 };
