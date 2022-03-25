@@ -35,7 +35,6 @@ class CraftingTable {
         /* ******* COMMAND ******* */
 
         void help();
-        void printItemList();
 
         /**
          * Menampilkan crafting table dan inventory

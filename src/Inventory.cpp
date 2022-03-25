@@ -69,10 +69,7 @@ void Inventory::give(NonTool* item, int quantity) {
                 cout << "Omg!! Your burden is too much dude, you can't add this item" << endl;
             }
             else {
-                NonTool* nt = new NonTool();
-                nt->set_name(item->get_name());
-                nt->set_quantity(min(quantity, 64));
-                nt->set_id(item->get_id());
+                NonTool* nt = new NonTool(item->get_id(), item->get_name(), item->get_type(), min(quantity, 64));
                 this->slot[invIdx] = nt;
                 quantity = max(0, quantity-64);
             }

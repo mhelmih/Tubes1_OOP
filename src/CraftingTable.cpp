@@ -7,9 +7,7 @@ CraftingTable::CraftingTable() {
     this->recipeConfigPath = configPath + "/recipe";
 }
 
-CraftingTable::~CraftingTable() {
-
-}
+CraftingTable::~CraftingTable() {}
 
 void CraftingTable::readItemConfig(vector<string> &words) {
     ItemConfig temp;
@@ -23,10 +21,10 @@ void CraftingTable::readItemConfig(vector<string> &words) {
     temp.set_category(words[iwords]);
     iwords++;
     try{
-        this->listItemConfig.addElmt(temp);;
+        this->listItemConfig.addElmt(temp);
     }
     catch(string& s){
-        cout << "list item config is full"<< endl;
+        cout << s << endl;
     }
 }
 
@@ -56,7 +54,7 @@ void CraftingTable::readItemRecipe(vector<string> &wordsrecipe) {
         this->listRecipeConfig.addRecipe(*temp);
     }
     catch(string& s){
-        cout << "list recipe is full"<< endl;
+        cout << s << endl;
     }
 }
 
@@ -84,12 +82,8 @@ void CraftingTable::readConfig() {
         words.clear();
     }
 
-    // show list
-    // listItemConfig.printList();
-
     // read recipes
     for (const auto &entry : filesystem::directory_iterator(configPath + "/recipe")) {
-        // cout << entry.path() << endl;
         // read from file and do something
 
         ifstream itemConfigRecipe(entry.path());
@@ -109,45 +103,30 @@ void CraftingTable::readConfig() {
         readItemRecipe(wordsrecipe);
         wordsrecipe.clear();
     }
-    // print recipe
-    // this->listRecipeConfig.printListRecipe();
-
-    // test list exception
-    // try{
-    //     ItemRecipe *temp = new ItemRecipe(listRecipeConfig[0]);
-    //     cout << temp->getElement(1, 0)<<endl;
-    // }
-    // catch (const char* msg){
-    //     cout << msg <<endl;
-    // }
 }
 
 void CraftingTable::help() {
     cout << "COMMAND LIST" << endl;
-    cout << "================================================================================================================" << endl;
-    cout << "HELP   : to show the command list." << endl;
-    cout << "ITEMS  : to show the item listed from the config file." << endl;
-    cout << "RECIPE : to show the recipe to craft an item." << endl;
-    cout << "SHOW   : to show the inventory and crafting table." << endl;
-    cout << "GIVE   : to add an item to inventory." << endl;
-    cout << "         for NonTools: GIVE <ITEM_NAME> <ITEM_QTY>" << endl;
-    cout << "         for Tools   : GIVE <ITEM_NAME>" << endl;
-    cout << "DISCARD: to decrease a NonTool item from inventory." << endl;
-    cout << "         syntax: DISCARD I<INVENTORY_SLOT_ID> <ITEM_QTY>" << endl;
-    cout << "MOVE   : to move items between inventory slots or between inventory and crafting table slots." << endl;
-    cout << "         inventory > inventory     : MOVE I<INVENTORY_SLOT_ID_SRC> 1 I<INVENTORY_SLOT_ID_DEST>" << endl;
-    cout << "         inventory > crafting table: MOVE I<INVENTORY_SLOT_ID> N C<CRAFTING_SLOT_ID_1> ... C<CRAFTING_SLOT_ID_N>" << endl;
-    cout << "         crafting table > inventory: MOVE C<CRAFTING_SLOT_ID> 1 I<INVENTORY_SLOT_ID>" << endl;
-    cout << "USE    : to use an item (decrease the durability by one)." << endl;
-    cout << "         syntax: USE I<INVENTORY_SLOT_ID>" << endl;
-    cout << "CRAFT  : to craft items based on the recipe." << endl;
-    cout << "EXPORT : to export the items inside inventory." << endl;
-    cout << "         syntax: EXPORT <FILE_NAME>" << endl;
-    cout << "EXIT   : to exit the program." << endl;
-}
-
-void CraftingTable::printItemList() {
-    cout << "TODO" << endl;
+    cout << "=================================================================================================================" << endl;
+    cout << "HELP    : to show the command list." << endl;
+    cout << "ITEMS   : to show the item listed from the config file." << endl;
+    cout << "RECIPE  : to show the recipe to craft an item." << endl;
+    cout << "SHOW    : to show the inventory and crafting table." << endl;
+    cout << "GIVE    : to add an item to inventory." << endl;
+    cout << "          for NonTools: GIVE <ITEM_NAME> <ITEM_QTY>" << endl;
+    cout << "          for Tools   : GIVE <ITEM_NAME>" << endl;
+    cout << "DISCARD : to decrease a NonTool item from inventory." << endl;
+    cout << "          syntax: DISCARD I<INVENTORY_SLOT_ID> <ITEM_QTY>" << endl;
+    cout << "MOVE    : to move items between inventory slots or between inventory and crafting table slots." << endl;
+    cout << "          inventory > inventory     : MOVE I<INVENTORY_SLOT_ID_SRC> 1 I<INVENTORY_SLOT_ID_DEST>" << endl;
+    cout << "          inventory > crafting table: MOVE I<INVENTORY_SLOT_ID> N C<CRAFTING_SLOT_ID_1> ... C<CRAFTING_SLOT_ID_N>" << endl;
+    cout << "          crafting table > inventory: MOVE C<CRAFTING_SLOT_ID> 1 I<INVENTORY_SLOT_ID>" << endl;
+    cout << "USE     : to use an item (decrease the durability by one)." << endl;
+    cout << "          syntax: USE I<INVENTORY_SLOT_ID>" << endl;
+    cout << "CRAFT   : to craft items based on the recipe." << endl;
+    cout << "EXPORT  : to export the items inside inventory." << endl;
+    cout << "          syntax: EXPORT <FILE_NAME>" << endl;
+    cout << "EXIT    : to exit the program." << endl;
 }
 
 void CraftingTable::show() {
@@ -155,6 +134,7 @@ void CraftingTable::show() {
     int invIdx = 0;
 
     // print craft slot
+    cout << "                                              CRAFTING TABLE" << endl; 
     while (crfIdx < CRAFT_SLOT) {
         // padding
         if (crfIdx % CRAFT_COL == 0) {
@@ -176,9 +156,44 @@ void CraftingTable::show() {
         }
         crfIdx++;
     }
+    // padding
+    for (int i = 0; i < 36; i++) {
+        cout << " ";
+    }
+    cout << "Craftable item(s): ";
+
+    //show what is the craftable item now
+    // if (crf.idxSlotTool().size() == 2) { // Craft TOOL
+    //     int i = crf.idxSlotTool()[0];
+    //     int j = crf.idxSlotTool()[1];
+    //     Tool *srcTool = dynamic_cast<Tool *>(crf[i]);
+    //     Tool *dstTool = dynamic_cast<Tool *>(crf[j]);
+    //     if (srcTool->get_name() == dstTool->get_name()) {
+    //         cout << srcTool->get_name() << " (10)";
+    //     }
+    // } else if (crf.idxSlotTool().size() == 0) {
+    //     bool flag = false;
+    //     int i = 0;
+    //     while (i < listRecipeConfig.get_Neff() && !flag) {
+    //         if (crf.isRecipe(listRecipeConfig[i], false)) {
+    //             flag = true;
+    //         }else if(crf.isRecipe(listRecipeConfig[i], true)){
+    //             flag = true;
+    //         } 
+    //         else {
+    //             i++;
+    //         }
+    //     }
+    //     if(flag) {
+    //         cout << listRecipeConfig[i].get_item() << " (" << listRecipeConfig[i].get_quantity() << ")";
+    //     }
+    // }
+    
+    cout << endl;
     cout << endl;
 
     // print inventory slot
+    cout << "                                                 INVENTORY" << endl;
     while (invIdx < INVENTORY_SLOT) {
         if (invIdx < 10) {
             cout << "[I" << invIdx << " |";
@@ -221,15 +236,20 @@ void CraftingTable::give() {
             inv.give(itm);
         } else if (listItemConfig[i].get_category() == "NONTOOL") {
             cin >> itemQty;
-            NonTool* itm = new NonTool(listItemConfig[i].get_id(), listItemConfig[i].get_name(), listItemConfig[i].get_type(), itemQty);
-            inv.give(itm, itemQty);
+            if(cin.fail()) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                throw "Wrong quantity input.";
+            } else{
+                NonTool* itm = new NonTool(listItemConfig[i].get_id(), listItemConfig[i].get_name(), listItemConfig[i].get_type(), itemQty);
+                inv.give(itm, itemQty);
+            }
         } else {
-            cout << "Category " << listItemConfig[i].get_category() << " Unknown." << endl;
+            throw "Category unknown.";
         }
     } else {
-        cout << "Item " << itemName << " Not Found." << endl;
+        throw "Item not found.";
     }
-    
 }
 
 void CraftingTable::discard() {
@@ -242,16 +262,6 @@ void CraftingTable::discard() {
     inv.discard(invId, qty);
 }
 
-// void CraftingTable::moveToCraft(int invIdx, int qty, int crfId) {
-//     cout << "TODO" << endl;
-// }
-// void CraftingTable::movetoStack(int invIdxSrc, int invIdDest) {
-//     cout << "TODO" << endl;
-// }
-// void CraftingTable::moveToInventory(int crfIdx, int invIdx) {
-//     cout << "TODO" << endl;
-// }
-
 void CraftingTable::move() {
     string* multislotDest;
     string slotSrc, source, destination;
@@ -261,6 +271,11 @@ void CraftingTable::move() {
     // need to handle multiple destinations
     cin >> slotSrc >> slotQty;
     
+    // if(cin.fail()) {
+    //     std::cin.clear();
+    //     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    //     throw "Wrong slot input";
+    // }
     multislotDest = new string[slotQty];
     for (int i=0; i<slotQty; i++) {
         cin >> multislotDest[i];
@@ -280,7 +295,7 @@ void CraftingTable::move() {
             moveToInventory(idxSrc, idxDest[0]);
         } else if (source == "I") {
             if (this->inv[idxSrc] == 0) {
-                cout << "I " << idxSrc << "is empty." << endl;
+                cout << "I" << idxSrc << " is empty." << endl;
             } else {
                 if (destination == "I") {
                     if (slotQty == 1) {
@@ -323,12 +338,11 @@ void CraftingTable::moveToCraft(int invIdx, int* crfIdx, int qty){
                     Tool* temp1 = new Tool(*temp);
                     this->crf[crfIdx[0]] = temp1;
                     this->inv[invIdx] = 0;
-                } else if (this->inv[invIdx]->isA<NonTool>()){
+                } else if (this->inv[invIdx]->isA<NonTool>()) {
                     NonTool* temp = dynamic_cast<NonTool*>(inv[invIdx]);
                     NonTool* temp1 = new NonTool(*temp);    
                     temp1->set_quantity(1);
                     this->crf[crfIdx[i]] = temp1;
-                    
                     NonTool* nt = dynamic_cast<NonTool*>(this->inv[invIdx]);
                     nt->set_quantity(nt->get_quantity() - 1);
                     if (nt->get_quantity() == 0) {
@@ -445,17 +459,20 @@ void CraftingTable::craft() {
             inv.give(dstTool);
             crf.emptyingCraft();
         } else {
-            cout << "Two different type of tools can't be combined." << endl;
+            throw "Two different type of tools can't be combined.";
         }
-    } else if (crf.idxSlotTool().size() > 2) {
-        cout << "Too many tools at crafting table, max 2" << endl;
-    } else { // Craft NONTOOL
+    } else if (crf.idxSlotTool().size() == 1) {
+        throw "Can't craft anything with 1 tool.";
+    } else if (crf.idxSlotTool().size() == 0) { // Craft NONTOOL
         int i = 0;
         bool flag = false;
         while (i < listRecipeConfig.get_Neff() && !flag) {
-            if (crf.isRecipe(listRecipeConfig[i],true) || crf.isRecipe(listRecipeConfig[i],false)) {
+            if (crf.isRecipe(listRecipeConfig[i], false)) {
                 flag = true;
-            } else {
+            }else if(crf.isRecipe(listRecipeConfig[i], true)){
+                flag = true;
+            } 
+            else {
                 i++;
             }
         }
@@ -475,21 +492,25 @@ void CraftingTable::craft() {
 
             if (found) {
                 crf.emptyingCraft();
-                if (listItemConfig[i].get_category() == "TOOL") {
-                    Tool* itm = new Tool(listItemConfig[i].get_id(), listItemConfig[i].get_name(), listItemConfig[i].get_type());
+                if (listItemConfig[j].get_category() == "TOOL") {
+                    Tool* itm = new Tool(listItemConfig[j].get_id(), listItemConfig[j].get_name(), listItemConfig[j].get_type());
                     inv.give(itm);
-                } else if (listItemConfig[i].get_category() == "NONTOOL") {
-                    NonTool* itm = new NonTool(listItemConfig[i].get_id(), listItemConfig[i].get_name(), listItemConfig[i].get_type(), itemQty);
+                } else if (listItemConfig[j].get_category() == "NONTOOL") {
+                    NonTool* itm = new NonTool(listItemConfig[j].get_id(), listItemConfig[j].get_name(), listItemConfig[j].get_type(), itemQty);
                     inv.give(itm, itemQty);
                 } else {
-                    cout << "Category " << listItemConfig[i].get_category() << " Unknown." << endl;
+                    //throw "Category " + listItemConfig[j].get_category() + " Unknown.";
+                    cout << "Category " + listItemConfig[j].get_category() + " Unknown." << endl;
                 }
-                } else {
-                cout << "Item " << itemName << " not found." << endl;
+            } else {
+                //throw "Item " + itemName + " not found.";
+                cout << "Item " << itemName + " not found." << endl;
             }
         } else {
-            cout << "Recipe not found.";
+            throw "Recipe not found.";
         }
+    }else{
+        throw "Too many tool at crafting table. Maximum of 2";
     }
 }
 
@@ -514,30 +535,35 @@ void CraftingTable::readCommand() {
     cout << ">>> ";
     cin >> this->command;
     while (this->command != "EXIT") {
-        if (command == "HELP") {
-            help();
-        } else if (command == "ITEMS") {
-            this->listItemConfig.printList();
-        } else if (command == "RECIPE") {
-            this->listRecipeConfig.printListRecipe();
-        } else if (command == "SHOW") {
-            show();
-        } else if (command == "GIVE") {
-            give();
-        } else if (command == "DISCARD") {
-            discard();
-        }else if (command == "MOVE") {
-            move();
-        } else if (command == "USE") {
-            use();
-        } else if (command == "CRAFT") {
-            craft();
-        } else if (command == "EXPORT") {
-            exportInventory();
-        } else {
-            cout << "Invalid command" << endl;
+        try {
+            if (command == "HELP") {
+                help();
+            } else if (command == "ITEMS") {
+                this->listItemConfig.printList();
+            } else if (command == "RECIPE") {
+                this->listRecipeConfig.printListRecipe();
+            } else if (command == "SHOW") {
+                show();
+            } else if (command == "GIVE") {
+                give();
+            } else if (command == "DISCARD") {
+                discard();
+            }else if (command == "MOVE") {
+                move();
+            } else if (command == "USE") {
+                use();
+            } else if (command == "CRAFT") {
+                craft();
+            } else if (command == "EXPORT") {
+                exportInventory();
+            } else {
+                cout << "Invalid command" << endl;
+            }
+        } catch (char const* s) {
+            cout << s << endl;
         }
         cout << endl;
+        cout << "Enter 'HELP' to show the command list." << endl;
         cout << ">>> ";
         cin >> this->command;
     }

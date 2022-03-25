@@ -1,7 +1,6 @@
 #include "Craft.hpp"
 
 Craft::Craft(){
-    
     slot.assign(9, 0);
     this->curCraft = new string*[CRAFT_ROW];
     for(int i =0;i<CRAFT_ROW; i++){
@@ -27,8 +26,8 @@ Craft::Craft(){
 
     this->optRow = 3;
     this->optCol = 3;
-    this->toolInSlot = 0;
     this->namedBased = false;
+    this->isMirrored = false;
     
 }
 
@@ -45,29 +44,26 @@ Item* &Craft::operator[](int idx) {
     return slot[idx];
 }
 
-void Craft::updateCurCraft(){
+void Craft::updateCurCraft() {
     int k = 0;
-    for(int i=0; i<CRAFT_ROW; i++){
-        for(int j=0; j<CRAFT_COL; j++){
-            if(this->slot[k]!=0){
-                if(namedBased){
+    for (int i = 0; i < CRAFT_ROW; i++){
+        for (int j = 0; j < CRAFT_COL; j++){
+            if (!(this->slot[k] == 0)) {
+                if (this->namedBased) {
                     this->curCraft[i][j] = slot[k]->get_name();
-                }else{
+                } else{
                     this->curCraft[i][j] = slot[k]->get_type();
-                    if(slot[k]->get_type()=="-"){
+                    if (slot[k]->get_type() == "-") {
                         this->curCraft[i][j] = slot[k]->get_name();
                     }
                 }
-                
-            }else{
+            } else {
                 this->curCraft[i][j] = "-";
             }
             k++;
         }
     }
     this->optCraft = curCraft;
-
-    //return this->curCraft;
 }
 
 bool Craft::isFull(){
@@ -88,9 +84,11 @@ void Craft::emptyingCraft(){
     for(int i=0; i<9; i++){
         this->slot[i] = 0;
     }
+    updateCurCraft();
 }
 
 bool Craft::emptyRow(int idx){
+    // updateCurCraft();
     int count = 0;
     for(int j=0; j<CRAFT_COL; j++){
         if(this->curCraft[idx][j]=="-"){
@@ -105,6 +103,7 @@ bool Craft::emptyRow(int idx){
 }
 
 bool Craft::emptyCol(int idx){
+    // updateCurCraft();
     int count = 0;
     for(int i=0; i<CRAFT_ROW; i++){
         if(this->curCraft[i][idx]=="-"){
@@ -129,53 +128,56 @@ void Craft::swapCol(){
 }
 
 void Craft::updateOptimizedCrft(){
-    cout << "masuk craft" << endl;
     updateCurCraft();
-    cout << "masuk0" << endl;
-    swapCol();
-    cout << "masuk 1" << endl;
+
+    for(int i = 0; i < optRow; i++){
+        for(int j = 0; j < optCol; j++){
+            cout << this->curCraft[i][j] << " ";
+        }
+        cout << endl;
+    }
+    if(this->isMirrored){
+        swapCol();
+    }
     int newRow = CRAFT_ROW;
     int newCol = CRAFT_COL;
     
-    cout << "masuk2" << endl;
-    if ((emptyRow(1) || emptyCol(1)) && ((!emptyCol(0) && !emptyCol(2)) || (!emptyRow(0) && !emptyRow(2)))){
+    // (emptyRow(1) || emptyCol(1)) && ((!emptyCol(0) && !emptyCol(2)) || (!emptyRow(0) && !emptyRow(2)))
+    if ((emptyRow(1) && (!emptyRow(0) && (!emptyRow(2)))) || (emptyCol(1) && (!emptyCol(0) && (!emptyCol(2))))){
+        
         this->optCraft = this->curCraft;
     } else {
-        cout << "masuk4" << endl;
-        for(int x = 0; x < CRAFT_ROW; x++) {
+        for(int x = 0; x < 3; x++) {
+            
             if(emptyRow(x)){
-                newRow-=1;
+                newRow--;
             }
             if(emptyCol(x)){
-                newCol-=1;
+                newCol--;
+                cout << "masuk";
             }
         }
-        cout << "masuk5" << endl;
-        //bool flag = false;
         this->optCraft= new string*[newRow];
-        cout << "masuk6" << endl;
         for(int i =0;i<this->optRow; i++){
             this->optCraft[i] = new string[newCol];
         }
-        cout << "masuk7" << endl;
+        //cout << "rOp/cOp " << optRow << optCol << endl;
         int rIdx =0;
         int cIdx = 0;
 
         // assign nilai aslinya
         for(int i = 0; i < CRAFT_ROW; i++) {
             cIdx = 0;
-            cout << "masuk for 1" << endl;
             for(int j = 0; j < CRAFT_COL; j++){
-                cout << "r/c " << rIdx << " " << cIdx << endl;
                 if(!emptyRow(i) && !emptyCol(j)) {
-                    cout << "masuk for 2" << endl;
                     this->optCraft[rIdx][cIdx] = this->curCraft[i][j];
                     //flag = true;
-                    cIdx++;
+                    if(cIdx < newCol) {
+                        cIdx++;
+                    }
                 }
-                cout << "tes" << endl;
             }
-            if(!emptyRow(i)){
+            if(!emptyRow(i) && rIdx < newRow) {
                 rIdx++;
             }
         }
@@ -186,44 +188,54 @@ void Craft::updateOptimizedCrft(){
 }
 
 bool Craft::isRecipe(ItemRecipe ls, bool isName){
-    this->namedBased=isName;
+    this->namedBased = isName;
     updateOptimizedCrft();
-
-    cout << optRow << optCol << endl;
-    for(int i = 0; i < optRow; i++){
-        for(int j = 0; j < optCol; j++){
-            cout << this->optCraft[i][j] << " ";
-        }
-        cout << endl;
-    }
-
-    bool flag = false;
     int row = ls.getRow();
     int col = ls.getCol();
+    
+    
+    // for(int i = 0; i < optRow; i++){
+    //     for(int j = 0; j < optCol; j++){
+    //         cout << this->optCraft[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
 
-    if ((this->optRow != row) && (this->optCol != col)) {
+    if (!(this->optRow == row && this->optCol == col)) {
+        cout << "1. r/c" << optRow << optCol << endl;
+        cout << "2. r/c" << row << col << endl;
         return false;
     } else {
+        cout << "3. r/c" << optRow << optCol << endl;
+        cout << "4. r/c" << row << col << endl;
         int i = 0;
         int j = 0;
         int count = 0;
-        while(!flag && i < row){
+        bool flag = false;
+        
+        while (!flag && i < optRow) {
             int j = 0;
-            while(!flag && j < col){
+            while(!flag && j < optCol){
                 if(this->optCraft[i][j] != ls.getElement(i,j)){
                     flag=true;
                 }
                 else{
                     count++;
+                    j++;
                 }
-                j++;
             }
             i++;
         }
 
         if (count == (row * col)){
             return true;
-        } else {
+        } else if (flag && !isMirrored){
+            this->isMirrored = true;
+            bool temp = isRecipe(ls,isName);
+            this->isMirrored = false;
+            return temp;
+        }
+        else{
             return false;
         }
     }

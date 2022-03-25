@@ -129,7 +129,7 @@ NonTool::NonTool(int id,string name, string type, int quantity) : Item(id,name, 
     this->quantity = quantity;
 }
 
-NonTool::NonTool(const NonTool& other) : Item(other.id, other.name,other.type) {
+NonTool::NonTool(const NonTool& other) : Item(other.id, other.name, other.type) {
     this->quantity = other.quantity;
 }
 

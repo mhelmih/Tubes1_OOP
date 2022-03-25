@@ -17,8 +17,8 @@ class Craft {
         string **curCraft;
         string **optCraft;
 
-        bool namedBased;
-        int toolInSlot;
+        bool namedBased; // for switching name and type based crafting
+        bool isMirrored; 
 
         int optRow; // Optimized slot craft row
         int optCol; // Optimized slot craft col
@@ -40,10 +40,6 @@ class Craft {
         Item* &operator[](int idx);
         void updateCurCraft();
         void updateOptimizedCrft();
-
-
-        
-        
 };
 
 #endif
