@@ -160,7 +160,6 @@ void Craft::updateOptimizedCrft(){
             for(int j = 0; j < CRAFT_COL; j++){
                 if(!emptyRow(i) && !emptyCol(j)) {
                     this->optCraft[rIdx][cIdx] = this->curCraft[i][j];
-                    //flag = true;
                     if(cIdx < newCol) {
                         cIdx++;
                     }

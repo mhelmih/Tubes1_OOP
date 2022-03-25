@@ -24,7 +24,6 @@ class Item {
         void set_type(string type);
         virtual void printInfo()=0;
         virtual string printExport()=0;
-        // virtual int get_quantity();
         template<typename T>
         bool isA(){
             return (dynamic_cast<T*>(this) != NULL);

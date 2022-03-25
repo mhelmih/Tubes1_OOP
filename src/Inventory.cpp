@@ -12,7 +12,6 @@ Inventory::~Inventory() {
 }
 
 Item* &Inventory::operator[](int idx) {
-    // harus ditambahin exception kalo lebih dari 27
     return slot[idx];
 }
 
@@ -20,7 +19,6 @@ vector<int> Inventory::isIn(string name) {
     vector<int> idx;
     for (int i = 0; i < INVENTORY_SLOT; i++) {
         if (this->slot[i]->isA<Tool>() || this->slot[i]->isA<NonTool>()) {
-            //cout << this->slot[i]->get_name() << endl;
             if (this->slot[i]->get_name() == name) {
                 idx.push_back(i);
             }

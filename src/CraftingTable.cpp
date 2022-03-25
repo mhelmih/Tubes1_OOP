@@ -156,41 +156,6 @@ void CraftingTable::show() {
         }
         crfIdx++;
     }
-    // padding
-    // for (int i = 0; i < 36; i++) {
-    //     cout << " ";
-    // }
-    // cout << "Craftable item(s): ";
-
-    // below algorithm is for showing craftable item (not fully implemented)
-    // show what is the craftable item
-    // if (crf.idxSlotTool().size() == 2) { // Craft TOOL
-    //     int i = crf.idxSlotTool()[0];
-    //     int j = crf.idxSlotTool()[1];
-    //     Tool *srcTool = dynamic_cast<Tool *>(crf[i]);
-    //     Tool *dstTool = dynamic_cast<Tool *>(crf[j]);
-    //     if (srcTool->get_name() == dstTool->get_name()) {
-    //         cout << srcTool->get_name() << " (10)";
-    //     }
-    // } else if (crf.idxSlotTool().size() == 0) {
-    //     bool flag = false;
-    //     int i = 0;
-    //     while (i < listRecipeConfig.get_Neff() && !flag) {
-    //         if (crf.isRecipe(listRecipeConfig[i], false)) {
-    //             flag = true;
-    //         }else if(crf.isRecipe(listRecipeConfig[i], true)){
-    //             flag = true;
-    //         } 
-    //         else {
-    //             i++;
-    //         }
-    //     }
-    //     if(flag) {
-    //         cout << listRecipeConfig[i].get_item() << " (" << listRecipeConfig[i].get_quantity() << ")";
-    //     }
-    // }
-    
-    // cout << endl;
     cout << endl;
 
     // print inventory slot
@@ -272,11 +237,6 @@ void CraftingTable::move() {
     // need to handle multiple destinations
     cin >> slotSrc >> slotQty;
     
-    // if(cin.fail()) {
-    //     std::cin.clear();
-    //     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    //     throw "Wrong slot input";
-    // }
     multislotDest = new string[slotQty];
     for (int i=0; i<slotQty; i++) {
         cin >> multislotDest[i];
@@ -446,7 +406,7 @@ void CraftingTable::use() {
 
 void CraftingTable::craft() {
     bool craftTool = false;
-    if (crf.idxSlotTool().size() == 2) { // Craft TOOL
+    if (crf.idxSlotTool().size() == 2) { // Combine TOOL
         craftTool = true;
         int i = crf.idxSlotTool()[0];
         int j = crf.idxSlotTool()[1];
@@ -464,7 +424,8 @@ void CraftingTable::craft() {
         }
     } else if (crf.idxSlotTool().size() == 1) {
         throw "Can't craft anything with 1 tool.";
-    } else if (crf.idxSlotTool().size() == 0) { // Craft NONTOOL
+    } else if (crf.idxSlotTool().size() == 0) { 
+        // Craft NONTOOL & TOOL
         int i = 0;
         bool flag = false;
         while (i < listRecipeConfig.get_Neff() && !flag) {
@@ -500,11 +461,9 @@ void CraftingTable::craft() {
                     NonTool* itm = new NonTool(listItemConfig[j].get_id(), listItemConfig[j].get_name(), listItemConfig[j].get_type(), itemQty);
                     inv.give(itm, itemQty);
                 } else {
-                    //throw "Category " + listItemConfig[j].get_category() + " Unknown.";
                     cout << "Category " + listItemConfig[j].get_category() + " Unknown." << endl;
                 }
             } else {
-                //throw "Item " + itemName + " not found.";
                 cout << "Item " << itemName + " not found." << endl;
             }
         } else {

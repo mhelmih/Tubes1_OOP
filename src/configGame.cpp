@@ -114,7 +114,6 @@ ItemRecipe::ItemRecipe(const ItemRecipe& recipe)
             this->matrix[i][j] = recipe.matrix[i][j];
         }
     }
-    // this->printRecipe();
 }
 ItemRecipe::~ItemRecipe()
 {
@@ -230,9 +229,9 @@ int ListItemConfig::get_Neff() const {
 }
 
 ItemConfig ListItemConfig::operator[](int index){
-    // sesuai id
+    
     return this->listconfig[index-1];
-    // need exception if out of range
+    
 }
 
 ListRecipe::ListRecipe(){
