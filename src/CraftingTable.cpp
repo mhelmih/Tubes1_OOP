@@ -407,6 +407,7 @@ void CraftingTable::use() {
 void CraftingTable::craft() {
     bool craftTool = false;
     if (crf.idxSlotTool().size() == 2) { // Combine TOOL
+        cout << "Success !!!" << endl;
         craftTool = true;
         int i = crf.idxSlotTool()[0];
         int j = crf.idxSlotTool()[1];
@@ -451,7 +452,8 @@ void CraftingTable::craft() {
                     j++;
                 }
             }
-
+    
+            cout << "Success !!!" << endl;
             if (found) {
                 crf.emptyingCraft();
                 if (listItemConfig[j].get_category() == "TOOL") {

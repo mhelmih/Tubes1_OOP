@@ -144,7 +144,6 @@ void Craft::updateOptimizedCrft(){
             }
             if(emptyCol(x)){
                 newCol--;
-                cout << "masuk";
             }
         }
         this->optCraft= new string*[newRow];
