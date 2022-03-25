@@ -88,7 +88,6 @@ void Craft::emptyingCraft(){
 }
 
 bool Craft::emptyRow(int idx){
-    // updateCurCraft();
     int count = 0;
     for(int j=0; j<CRAFT_COL; j++){
         if(this->curCraft[idx][j]=="-"){
@@ -103,7 +102,6 @@ bool Craft::emptyRow(int idx){
 }
 
 bool Craft::emptyCol(int idx){
-    // updateCurCraft();
     int count = 0;
     for(int i=0; i<CRAFT_ROW; i++){
         if(this->curCraft[i][idx]=="-"){
@@ -130,25 +128,17 @@ void Craft::swapCol(){
 void Craft::updateOptimizedCrft(){
     updateCurCraft();
 
-    for(int i = 0; i < optRow; i++){
-        for(int j = 0; j < optCol; j++){
-            cout << this->curCraft[i][j] << " ";
-        }
-        cout << endl;
-    }
     if(this->isMirrored){
         swapCol();
     }
     int newRow = CRAFT_ROW;
     int newCol = CRAFT_COL;
     
-    // (emptyRow(1) || emptyCol(1)) && ((!emptyCol(0) && !emptyCol(2)) || (!emptyRow(0) && !emptyRow(2)))
     if ((emptyRow(1) && (!emptyRow(0) && (!emptyRow(2)))) || (emptyCol(1) && (!emptyCol(0) && (!emptyCol(2))))){
         
         this->optCraft = this->curCraft;
     } else {
         for(int x = 0; x < 3; x++) {
-            
             if(emptyRow(x)){
                 newRow--;
             }
@@ -161,7 +151,6 @@ void Craft::updateOptimizedCrft(){
         for(int i =0;i<this->optRow; i++){
             this->optCraft[i] = new string[newCol];
         }
-        //cout << "rOp/cOp " << optRow << optCol << endl;
         int rIdx =0;
         int cIdx = 0;
 
@@ -192,22 +181,10 @@ bool Craft::isRecipe(ItemRecipe ls, bool isName){
     updateOptimizedCrft();
     int row = ls.getRow();
     int col = ls.getCol();
-    
-    
-    // for(int i = 0; i < optRow; i++){
-    //     for(int j = 0; j < optCol; j++){
-    //         cout << this->optCraft[i][j] << " ";
-    //     }
-    //     cout << endl;
-    // }
 
     if (!(this->optRow == row && this->optCol == col)) {
-        cout << "1. r/c" << optRow << optCol << endl;
-        cout << "2. r/c" << row << col << endl;
         return false;
     } else {
-        cout << "3. r/c" << optRow << optCol << endl;
-        cout << "4. r/c" << row << col << endl;
         int i = 0;
         int j = 0;
         int count = 0;

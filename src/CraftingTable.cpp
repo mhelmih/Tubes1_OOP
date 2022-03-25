@@ -157,12 +157,13 @@ void CraftingTable::show() {
         crfIdx++;
     }
     // padding
-    for (int i = 0; i < 36; i++) {
-        cout << " ";
-    }
-    cout << "Craftable item(s): ";
+    // for (int i = 0; i < 36; i++) {
+    //     cout << " ";
+    // }
+    // cout << "Craftable item(s): ";
 
-    //show what is the craftable item now
+    // below algorithm is for showing craftable item (not fully implemented)
+    // show what is the craftable item
     // if (crf.idxSlotTool().size() == 2) { // Craft TOOL
     //     int i = crf.idxSlotTool()[0];
     //     int j = crf.idxSlotTool()[1];
@@ -189,7 +190,7 @@ void CraftingTable::show() {
     //     }
     // }
     
-    cout << endl;
+    // cout << endl;
     cout << endl;
 
     // print inventory slot
